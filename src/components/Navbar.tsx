@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRightIcon } from "./icons";
 import { PillLink } from "./Pill";
+import { SectionLink } from "./SectionLink";
 
 // Floating pill navbar with two variants:
 // - expanded: full bar (availability pill, links, "Let's Talk")
@@ -184,13 +184,13 @@ export function Navbar({ availabilityLabel, isAvailable, contactEmail }: NavbarP
           <ul className="flex flex-col lg:flex-row lg:gap-[clamp(1.25rem,3vw,3.5rem)]">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <Link
+                <SectionLink
                   href={link.href}
                   onClick={closeMenu}
                   className="block rounded-full px-1 py-2 text-nav transition-opacity hover:opacity-60 focus-visible:outline-2 focus-visible:outline-ink"
                 >
                   {link.label}
-                </Link>
+                </SectionLink>
               </li>
             ))}
           </ul>

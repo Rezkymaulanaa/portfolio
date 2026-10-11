@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { SectionLink } from "./SectionLink";
 
 // Shared pill-shaped buttons and links.
 // variant: accent (pink), dark (near-black), outline (bordered), light (white).
@@ -47,6 +48,15 @@ export function PillLink({ href, variant, children, className, external, onClick
       >
         {children}
       </a>
+    );
+  }
+
+  // Links to a section ("#work", "/#work") scroll there on every click.
+  if (href.includes("#")) {
+    return (
+      <SectionLink href={href} className={classes} onClick={onClick}>
+        {children}
+      </SectionLink>
     );
   }
 

@@ -1,6 +1,7 @@
 import { NavigationTracker } from "@/components/BackLink";
 import { CtaFooter } from "@/components/CtaFooter";
 import { Navbar } from "@/components/Navbar";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { SkipLink } from "@/components/SkipLink";
 import { sanityFetch } from "@/sanity/lib/client";
 import { SETTINGS_QUERY, type SiteSettings } from "@/sanity/lib/queries";
@@ -22,6 +23,7 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
       />
       <main id="main" className="flex-1">{children}</main>
       <CtaFooter settings={settings} />
+      <ScrollToTop />
     </>
   );
 }
