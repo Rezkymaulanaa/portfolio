@@ -10,7 +10,11 @@ import { PillLink, pillClasses } from "./Pill";
 export function CtaFooter({ settings }: { settings: SiteSettings }) {
   return (
     <div className="relative overflow-hidden bg-page">
-      <BrushStroke className="absolute bottom-0 left-1/2 h-auto w-[max(60rem,94%)] -translate-x-1/2" />
+      {/* Sized in rem so it scales with the content. The line fades out at the
+          top instead of being cut off at the edge of this block. */}
+      <div className="pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent,black_30%)]">
+        <BrushStroke className="absolute bottom-0 left-1/2 h-auto w-[60rem] max-w-none -translate-x-1/2 lg:w-[85rem]" />
+      </div>
 
       <section
         aria-labelledby="cta-heading"

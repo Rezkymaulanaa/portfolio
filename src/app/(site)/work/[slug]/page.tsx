@@ -181,10 +181,10 @@ function DetailStroke() {
       viewBox="0 0 1440 1400"
       fill="none"
       aria-hidden="true"
-      className="pointer-events-none absolute top-0 left-1/2 hidden w-[90rem] -translate-x-1/2 text-ink/40 lg:block"
+      className="pointer-events-none absolute top-0 left-1/2 hidden w-[90rem] max-w-none -translate-x-1/2 overflow-visible text-ink/40 lg:block"
     >
       <path
-        d="M-20 520C180 560 400 610 560 628C700 644 700 570 640 545C560 512 470 520 505 590C540 660 640 690 760 760C960 880 1200 1180 1460 1290"
+        d="M-1000 324L-20 520C180 560 400 610 560 628C700 644 700 570 640 545C560 512 470 520 505 590C540 660 640 690 760 760C960 880 1200 1180 1460 1290L2400 1688"
         stroke="currentColor"
         strokeWidth="17"
         strokeLinecap="round"
