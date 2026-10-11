@@ -75,6 +75,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/*
+ * Desktop scale. All sizes use rem, so a smaller root font size shrinks the
+ * whole layout evenly (like browser zoom). On a 1440px laptop the site looks
+ * like 80% zoom; from about 1800px wide it is back to 100%.
+ * Phones and tablets keep the normal size.
+ */
+@media (min-width: 64rem) {
+  html {
+    font-size: clamp(0.8125rem, 0.89vw, 1rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
