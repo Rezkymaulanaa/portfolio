@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    // Allow next/image to load pictures from the Sanity CDN.
+    remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
+  },
   turbopack: {
     rules: {
       "*.css": {
