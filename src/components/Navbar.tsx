@@ -13,7 +13,7 @@ import { SectionLink } from "./SectionLink";
 // Desktop: expanded at the top of the page, collapsed after scrolling.
 // It expands again on mouse hover or keyboard focus.
 // Phones/tablets: always collapsed; tapping the dots opens a stacked menu.
-// Hidden on project detail pages.
+// Hidden on the work pages (/work and /work/<slug>), which have a Back button.
 
 const NAV_LINKS = [
   { label: "Work", href: "/#work" },
@@ -123,8 +123,8 @@ export function Navbar({ availabilityLabel, isAvailable, contactEmail }: NavbarP
 
   const showBarStyle = expanded && atTop && isDesktop;
 
-  // Project detail pages (/work/<slug>) have no navbar, as in the design.
-  if (pathname.startsWith("/work/")) return null;
+  // The work pages (/work and /work/<slug>) use a Back button instead.
+  if (pathname === "/work" || pathname.startsWith("/work/")) return null;
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-4 lg:top-10">
