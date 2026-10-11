@@ -38,11 +38,17 @@ export type SiteSettings = {
   ogImage?: SanityImage;
 };
 
+// Display names of the project categories (values are stored in Sanity).
+export const CATEGORY_LABELS = {
+  "real-project": "Real Project",
+  exploration: "Exploration",
+} as const;
+
 export type ProjectCardData = {
   _id: string;
   title: string;
   slug: string;
-  category: "real-project" | "exploration";
+  category: keyof typeof CATEGORY_LABELS;
   tags?: string[];
   coverImage: SanityImage;
 };
