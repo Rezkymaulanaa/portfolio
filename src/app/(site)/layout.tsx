@@ -1,3 +1,4 @@
+import { NavigationTracker } from "@/components/BackLink";
 import { CtaFooter } from "@/components/CtaFooter";
 import { Navbar } from "@/components/Navbar";
 import { sanityFetch } from "@/sanity/lib/client";
@@ -11,6 +12,7 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
 
   return (
     <>
+      <NavigationTracker />
       <Navbar
         availabilityLabel={settings.availabilityLabel}
         isAvailable={settings.isAvailable}

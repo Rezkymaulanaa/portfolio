@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import { BackLink } from "@/components/BackLink";
 import { notFound } from "next/navigation";
 import { DashedDivider } from "@/components/DashedDivider";
 import { ArrowLeftIcon, ArrowUpRightIcon } from "@/components/icons";
@@ -53,9 +53,9 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
         <DetailStroke />
 
         <div className="relative mx-auto max-w-[76rem] px-4 pt-10 sm:px-6 lg:pt-16">
-          <Link href="/work" className={pillClasses("outline", "text-pill")}>
+          <BackLink fallbackHref="/work" className={pillClasses("outline", "text-pill")}>
             <ArrowLeftIcon /> Back
-          </Link>
+          </BackLink>
 
           <header className="mt-10 flex flex-col gap-10 lg:mt-[4.5rem] lg:flex-row lg:justify-between">
             <div className="max-w-[42rem]">
