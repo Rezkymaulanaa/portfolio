@@ -80,3 +80,45 @@ export type SkillGroup = {
 export const SKILL_GROUPS_QUERY = defineQuery(
   `*[_type == "skillGroup"] | order(order asc){ _id, title, items }`,
 );
+
+export const ALL_PROJECTS_QUERY = defineQuery(
+  `*[_type == "project"] | order(order asc){ ${PROJECT_CARD_FIELDS} }`,
+);
+
+export const PROJECT_SLUGS_QUERY = defineQuery(
+  `*[_type == "project" && defined(slug.current)].slug.current`,
+);
+
+// Image with its width/height, so the page does not jump while it loads.
+export type SizedImage = SanityImage & {
+  _key?: string;
+  dimensions?: { width: number; height: number };
+};
+
+export type ProjectDetail = {
+  _id: string;
+  title: string;
+  slug: string;
+  tags?: string[];
+  shortDescription?: string;
+  timeline?: string;
+  livePreviewUrl?: string;
+  service?: string;
+  tools?: Tool[];
+  coverImage: SizedImage;
+  gallery?: SizedImage[];
+};
+
+const SIZED_IMAGE = `..., "dimensions": asset->metadata.dimensions{ width, height }`;
+
+export const PROJECT_QUERY = defineQuery(`*[_type == "project" && slug.current == $slug][0]{
+  _id, title, "slug": slug.current, tags, shortDescription, timeline, livePreviewUrl,
+  "service": service->title,
+  tools[]->{ _id, name, icon },
+  coverImage{ ${SIZED_IMAGE} },
+  gallery[]{ ${SIZED_IMAGE} }
+}`);
+
+export const MORE_PROJECTS_QUERY = defineQuery(
+  `*[_type == "project" && slug.current != $slug] | order(featured desc, order asc)[0...2]{ ${PROJECT_CARD_FIELDS} }`,
+);
