@@ -14,7 +14,7 @@ export function ServiceList({ services }: { services: Service[] }) {
   return (
     <ul onPointerLeave={() => setActiveId(null)}>
       {services.map((service) => (
-        <li key={service._id}>
+        <li key={service._id} className="reveal">
           <ServiceRow
             service={service}
             active={activeId === service._id}

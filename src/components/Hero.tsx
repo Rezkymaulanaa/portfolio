@@ -12,7 +12,7 @@ export function Hero({ settings }: { settings: SiteSettings }) {
   const nameLines = settings.fullName.split(" ");
 
   return (
-    <section className="relative flex min-h-[38rem] items-end overflow-hidden bg-line pb-12 sm:min-h-[44rem] lg:h-[min(74vw,66.5rem)] lg:pb-32">
+    <section className="relative flex min-h-[38rem] items-end overflow-hidden bg-line pb-12 sm:min-h-[44rem] lg:min-h-[min(74vw,66.5rem)] lg:pt-40 lg:pb-32">
       <Image
         src={urlFor(settings.heroImage)}
         alt={settings.heroImage.alt ?? ""}
@@ -27,7 +27,7 @@ export function Hero({ settings }: { settings: SiteSettings }) {
         className="absolute inset-0 bg-gradient-to-t from-page/85 via-page/40 to-transparent lg:hidden"
       />
 
-      <div className="relative mx-auto w-full max-w-[77.5rem] px-4 sm:px-6 lg:px-1">
+      <div className="relative mx-auto w-full max-w-[77.5rem] px-4 sm:px-6 xl:px-1">
         <h1 className="text-hero leading-[0.86] font-extrabold tracking-[0.15em] text-ink uppercase">
           {nameLines.map((word) => (
             <span key={word} className="block">
@@ -36,7 +36,7 @@ export function Hero({ settings }: { settings: SiteSettings }) {
           ))}
         </h1>
 
-        <div className="mt-10 flex flex-col gap-8 lg:mt-[8.5rem] lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-10 flex flex-col gap-8 lg:mt-16 lg:flex-row xl:mt-[8.5rem] lg:items-end lg:justify-between">
           <div>
             {settings.headline && (
               <p className="text-xl font-bold sm:text-3xl lg:text-[2.5rem] lg:leading-tight">

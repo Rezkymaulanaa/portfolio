@@ -52,7 +52,7 @@ export function WorkGrid({ projects, action }: WorkGridProps) {
       {visible.length > 0 ? (
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:mt-14">
           {visible.map((project) => (
-            <li key={project._id}>
+            <li key={project._id} className="reveal">
               <ProjectCard project={project} />
             </li>
           ))}

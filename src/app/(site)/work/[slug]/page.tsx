@@ -133,7 +133,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
             <SectionHeading id="more-work-heading" title="More Work" align="center" />
             <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-16">
               {moreProjects.map((item) => (
-                <li key={item._id}>
+                <li key={item._id} className="reveal">
                   <ProjectCard project={item} />
                 </li>
               ))}
@@ -160,7 +160,7 @@ function ProjectImage({ image, preload }: { image: SizedImage; preload: boolean 
   const height = image.dimensions?.height ?? 1200;
 
   return (
-    <figure className="rounded-frame border border-line/40 bg-surface/70 p-3 shadow-pill sm:p-5 lg:p-8">
+    <figure className="reveal rounded-frame border border-line/40 bg-surface/70 p-3 shadow-pill sm:p-5 lg:p-8">
       <Image
         src={urlFor(image)}
         alt={image.alt ?? ""}

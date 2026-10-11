@@ -1,6 +1,7 @@
 import { NavigationTracker } from "@/components/BackLink";
 import { CtaFooter } from "@/components/CtaFooter";
 import { Navbar } from "@/components/Navbar";
+import { SkipLink } from "@/components/SkipLink";
 import { sanityFetch } from "@/sanity/lib/client";
 import { SETTINGS_QUERY, type SiteSettings } from "@/sanity/lib/queries";
 
@@ -13,12 +14,13 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
   return (
     <>
       <NavigationTracker />
+      <SkipLink />
       <Navbar
         availabilityLabel={settings.availabilityLabel}
         isAvailable={settings.isAvailable}
         contactEmail={settings.contactEmail}
       />
-      <main className="flex-1">{children}</main>
+      <main id="main" className="flex-1">{children}</main>
       <CtaFooter settings={settings} />
     </>
   );

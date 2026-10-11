@@ -28,7 +28,7 @@ export function Capabilities({ skillGroups, tools }: CapabilitiesProps) {
 
         <div className="mt-10 lg:mt-20">
           {skillGroups.map((group) => (
-            <div key={group._id} className="border-b border-line/80 py-6 lg:px-5 lg:py-8">
+            <div key={group._id} className="reveal border-b border-line/80 py-6 lg:px-5 lg:py-8">
               <h3 className="text-xl font-semibold lg:text-[2rem] lg:leading-tight">{group.title}</h3>
               <ul className="mt-4 list-disc space-y-1 pl-6 text-base text-page/85 marker:text-page/85 lg:mt-6 lg:pl-9 lg:text-2xl lg:leading-tight">
                 {group.items.map((item) => (
@@ -39,7 +39,7 @@ export function Capabilities({ skillGroups, tools }: CapabilitiesProps) {
           ))}
 
           {tools.length > 0 && (
-            <div className="border-b border-line/80 py-6 lg:px-5 lg:py-8">
+            <div className="reveal border-b border-line/80 py-6 lg:px-5 lg:py-8">
               <h3 className="text-xl font-semibold lg:text-[2rem] lg:leading-tight">
                 Tools that i usually use
               </h3>

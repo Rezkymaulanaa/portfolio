@@ -1,6 +1,7 @@
 import { CtaFooter } from "@/components/CtaFooter";
 import { ArrowLeftIcon } from "@/components/icons";
 import { Navbar } from "@/components/Navbar";
+import { SkipLink } from "@/components/SkipLink";
 import { PillLink } from "@/components/Pill";
 import { SectionHeading } from "@/components/SectionHeading";
 import { sanityFetch } from "@/sanity/lib/client";
@@ -13,12 +14,13 @@ export default async function NotFound() {
 
   return (
     <>
+      <SkipLink />
       <Navbar
         availabilityLabel={settings.availabilityLabel}
         isAvailable={settings.isAvailable}
         contactEmail={settings.contactEmail}
       />
-      <main className="flex-1">
+      <main id="main" className="flex-1">
         <section className="mx-auto max-w-content px-4 pt-36 text-center sm:px-6 lg:pt-56">
           <SectionHeading as="h1" watermark="404" title="Page not found" align="center" />
           <p className="mx-auto mt-6 max-w-xl text-lg lg:text-2xl">

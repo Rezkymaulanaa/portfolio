@@ -22,7 +22,7 @@ export function SectionHeading({
   const isCenter = align === "center";
 
   return (
-    <div className={`relative overflow-x-clip ${isCenter ? "text-center" : ""}`}>
+    <div className={`reveal relative overflow-x-clip ${isCenter ? "text-center" : ""}`}>
       {watermark && (
         <span
           aria-hidden="true"

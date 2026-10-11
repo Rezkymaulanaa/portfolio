@@ -14,7 +14,7 @@ export function CtaFooter({ settings }: { settings: SiteSettings }) {
 
       <section
         aria-labelledby="cta-heading"
-        className="relative mx-auto max-w-content px-4 pt-28 text-center sm:px-6 lg:pt-72"
+        className="reveal relative mx-auto max-w-content px-4 pt-28 text-center sm:px-6 lg:pt-72"
       >
         <h2 id="cta-heading" className="text-cta font-bold uppercase">
           {settings.ctaHeading}
