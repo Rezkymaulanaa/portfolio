@@ -13,7 +13,7 @@ export default async function WorkPage() {
   const projects = await sanityFetch<ProjectCardData[]>(ALL_PROJECTS_QUERY);
 
   return (
-    <section className="mx-auto max-w-[76rem] px-4 pt-32 pb-20 sm:px-6 lg:pt-48 lg:pb-16">
+    <section className="mx-auto max-w-work px-gutter pt-32 pb-20 lg:pt-48 lg:pb-16">
       <SectionHeading as="h1" watermark="Portfolio" title="All Work" align="center" />
       <div className="mt-8 lg:mt-12">
         <WorkGrid projects={projects} />

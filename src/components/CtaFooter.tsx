@@ -14,7 +14,7 @@ export function CtaFooter({ settings }: { settings: SiteSettings }) {
 
       <section
         aria-labelledby="cta-heading"
-        className="reveal relative mx-auto max-w-content px-4 pt-28 text-center sm:px-6 lg:pt-72"
+        className="reveal relative mx-auto max-w-content px-gutter pt-28 text-center lg:pt-72"
       >
         <h2 id="cta-heading" className="text-cta font-bold uppercase">
           {settings.ctaHeading}
@@ -33,7 +33,7 @@ export function CtaFooter({ settings }: { settings: SiteSettings }) {
         </PillLink>
       </section>
 
-      <footer className="relative mx-auto flex max-w-[58rem] flex-wrap items-center justify-center gap-4 px-4 pt-16 pb-24 text-pill sm:justify-between sm:px-6 lg:pt-24 lg:pb-72">
+      <footer className="relative mx-auto flex max-w-[65.75rem] flex-wrap items-center justify-center gap-4 px-gutter pt-16 pb-24 text-pill sm:justify-between lg:pt-24 lg:pb-72">
         <p className={pillClasses("dark", "pl-[0.4em] hover:bg-ink")}>
           {settings.footerAvatar ? (
             <Image

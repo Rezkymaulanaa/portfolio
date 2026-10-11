@@ -21,7 +21,7 @@ export default async function NotFound() {
         contactEmail={settings.contactEmail}
       />
       <main id="main" className="flex-1">
-        <section className="mx-auto max-w-content px-4 pt-36 text-center sm:px-6 lg:pt-56">
+        <section className="mx-auto max-w-content px-gutter pt-36 text-center lg:pt-56">
           <SectionHeading as="h1" watermark="404" title="Page not found" align="center" />
           <p className="mx-auto mt-6 max-w-xl text-lg lg:text-2xl">
             The page you are looking for does not exist or has been moved.

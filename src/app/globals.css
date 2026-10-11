@@ -21,7 +21,10 @@
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
   /* Layout */
-  --container-content: 78.75rem; /* 1260px incl. padding = 1211px content at desktop */
+  /* Max widths include the side gutter (px-gutter, 4rem each side at desktop). */
+  --container-content: 83.75rem; /* 1211px content: service, capabilities, about */
+  --container-work: 81.25rem; /* 1170px content: project grids, detail page */
+  --container-hero: 85rem; /* hero text starts 105px from the edge at 1440px */
 
   /* Radii: pills use rounded-full; cards use rounded-card */
   --radius-card: 0.5rem;
@@ -35,7 +38,8 @@
    * Type scale. Sizes are the desktop (1440px) sizes from the mockup;
    * clamp() shrinks them smoothly on smaller screens.
    */
-  --text-hero: clamp(3rem, 8.4vw, 7.6rem);
+  /* Hero name also shrinks on short screens (svh) so the hero fits one screen. */
+  --text-hero: clamp(3rem, min(8.4vw, 12.5svh), 7.6rem);
   --text-hero--line-height: 1;
   --text-watermark: clamp(2.75rem, 9.5vw, 8.75rem);
   --text-watermark--line-height: 1;
@@ -49,6 +53,11 @@
   --text-nav--line-height: 1.4;
   --text-pill: clamp(1rem, 1.6vw, 1.5rem);
   --text-pill--line-height: 1.4;
+}
+
+/* Side margin that grows with the screen: 16px on phones up to 64px on desktop. */
+@utility px-gutter {
+  padding-inline: clamp(1rem, 5vw, 4rem);
 }
 
 /* Devices without hover (phones, tablets) */

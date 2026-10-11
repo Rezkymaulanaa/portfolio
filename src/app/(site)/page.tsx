@@ -34,7 +34,7 @@ export default async function HomePage() {
       <section
         id="work"
         aria-labelledby="work-heading"
-        className="mx-auto max-w-[76rem] scroll-mt-8 px-4 pt-20 pb-20 sm:px-6 lg:pt-28 lg:pb-40"
+        className="mx-auto max-w-work scroll-mt-8 px-gutter pt-20 pb-20 lg:pt-28 lg:pb-40"
       >
         <SectionHeading id="work-heading" watermark="Portfolio" title="Selected Work" align="center" />
         <div className="mt-8 lg:mt-12">
@@ -54,7 +54,7 @@ export default async function HomePage() {
       <section
         id="service"
         aria-labelledby="service-heading"
-        className="mx-auto max-w-content scroll-mt-8 px-4 py-20 sm:px-6 lg:pt-40 lg:pb-48"
+        className="mx-auto max-w-content scroll-mt-8 px-gutter py-20 lg:pt-40 lg:pb-48"
       >
         <SectionHeading id="service-heading" watermark="Service" title="Service" />
         <div className="mt-10 lg:mt-20">

@@ -18,7 +18,7 @@ export function Capabilities({ skillGroups, tools }: CapabilitiesProps) {
       aria-labelledby="capabilities-heading"
       className="scroll-mt-8 bg-ink py-20 text-page lg:pt-44 lg:pb-40"
     >
-      <div className="mx-auto max-w-content px-4 sm:px-6">
+      <div className="mx-auto max-w-content px-gutter">
         <SectionHeading
           id="capabilities-heading"
           watermark="Capabilities"

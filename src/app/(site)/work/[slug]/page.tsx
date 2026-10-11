@@ -52,7 +52,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
       <article className="relative overflow-x-clip">
         <DetailStroke />
 
-        <div className="relative mx-auto max-w-[76rem] px-4 pt-10 sm:px-6 lg:pt-16">
+        <div className="relative mx-auto max-w-work px-gutter pt-10 lg:pt-16">
           <BackLink fallbackHref="/work" className={pillClasses("outline", "text-pill")}>
             <ArrowLeftIcon /> Back
           </BackLink>
@@ -128,7 +128,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
           </div>
           <section
             aria-labelledby="more-work-heading"
-            className="mx-auto max-w-[76rem] px-4 pt-16 pb-4 sm:px-6 lg:pt-24"
+            className="mx-auto max-w-work px-gutter pt-16 pb-4 lg:pt-24"
           >
             <SectionHeading id="more-work-heading" title="More Work" align="center" />
             <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-16">
