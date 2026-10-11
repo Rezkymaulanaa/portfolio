@@ -1,3 +1,4 @@
+import { ContactProvider } from "@/components/contact/ContactProvider";
 import { CtaFooter } from "@/components/CtaFooter";
 import { ArrowLeftIcon } from "@/components/icons";
 import { Navbar } from "@/components/Navbar";
@@ -13,12 +14,14 @@ export default async function NotFound() {
   const settings = await sanityFetch<SiteSettings>(SETTINGS_QUERY);
 
   return (
-    <>
+    <ContactProvider
+      ownerName={settings.footerName ?? settings.fullName}
+      contactEmail={settings.contactEmail}
+    >
       <SkipLink />
       <Navbar
         availabilityLabel={settings.availabilityLabel}
         isAvailable={settings.isAvailable}
-        contactEmail={settings.contactEmail}
       />
       <main id="main" className="flex-1">
         <section className="mx-auto max-w-content px-gutter pt-36 text-center lg:pt-56">
@@ -32,6 +35,6 @@ export default async function NotFound() {
         </section>
       </main>
       <CtaFooter settings={settings} />
-    </>
+    </ContactProvider>
   );
 }

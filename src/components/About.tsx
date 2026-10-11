@@ -1,8 +1,7 @@
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import type { SiteSettings } from "@/sanity/lib/queries";
-import { ArrowUpRightIcon } from "./icons";
-import { PillLink } from "./Pill";
+import { LetsTalkButton } from "./contact/ContactProvider";
 import { SectionHeading } from "./SectionHeading";
 
 // "About Me" section (not in the original design; built in the same style).
@@ -47,13 +46,7 @@ export function About({ settings }: { settings: SiteSettings }) {
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
-            <PillLink
-              href={`mailto:${settings.contactEmail}`}
-              variant="dark"
-              className="mt-8 text-pill lg:mt-12"
-            >
-              Let&apos;s Talk <ArrowUpRightIcon />
-            </PillLink>
+            <LetsTalkButton variant="dark" className="mt-8 text-pill lg:mt-12" />
           </div>
         </div>
       </div>

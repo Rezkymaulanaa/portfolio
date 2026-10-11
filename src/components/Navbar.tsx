@@ -2,8 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRightIcon } from "./icons";
-import { PillLink } from "./Pill";
+import { LetsTalkButton } from "./contact/ContactProvider";
 import { SectionLink } from "./SectionLink";
 
 // Floating pill navbar with two variants:
@@ -32,10 +31,9 @@ const LEAVE_DELAY_MS = 300;
 type NavbarProps = {
   availabilityLabel?: string;
   isAvailable?: boolean;
-  contactEmail: string;
 };
 
-export function Navbar({ availabilityLabel, isAvailable, contactEmail }: NavbarProps) {
+export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
   const navRef = useRef<HTMLElement>(null);
   const leaveTimer = useRef<number | undefined>(undefined);
   const openedAtScrollY = useRef(0);
@@ -195,14 +193,11 @@ export function Navbar({ availabilityLabel, isAvailable, contactEmail }: NavbarP
             ))}
           </ul>
 
-          <PillLink
-            href={`mailto:${contactEmail}`}
+          <LetsTalkButton
             variant="dark"
             onClick={closeMenu}
             className="self-start text-nav lg:self-auto"
-          >
-            Let&apos;s Talk <ArrowUpRightIcon />
-          </PillLink>
+          />
         </div>
       </nav>
     </header>

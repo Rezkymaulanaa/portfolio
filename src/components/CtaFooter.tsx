@@ -2,7 +2,8 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import type { SiteSettings } from "@/sanity/lib/queries";
 import { BrushStroke } from "./BrushStroke";
-import { ArrowUpRightIcon, InstagramIcon, LinkedInIcon, UserCircleIcon } from "./icons";
+import { InstagramIcon, LinkedInIcon, UserCircleIcon } from "./icons";
+import { LetsTalkButton } from "./contact/ContactProvider";
 import { PillLink, pillClasses } from "./Pill";
 
 // "Have a project in mind?" call to action + footer. Shared by every page.
@@ -28,13 +29,7 @@ export function CtaFooter({ settings }: { settings: SiteSettings }) {
             {settings.ctaText}
           </p>
         )}
-        <PillLink
-          href={`mailto:${settings.contactEmail}`}
-          variant="accent"
-          className="mt-10 text-pill lg:mt-24"
-        >
-          Let&apos;s Talk <ArrowUpRightIcon />
-        </PillLink>
+        <LetsTalkButton variant="accent" className="mt-10 text-pill lg:mt-24" />
       </section>
 
       <footer className="relative mx-auto flex max-w-[65.75rem] flex-wrap items-center justify-center gap-4 px-gutter pt-16 pb-24 text-pill sm:justify-between lg:pt-24 lg:pb-72">

@@ -2,16 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { scrollToTop } from "@/lib/scroll";
+import { useContact } from "./contact/ContactProvider";
 import { ArrowUpIcon } from "./icons";
 
 // Round "back to top" button in the bottom-right corner.
-// It appears after scrolling down more than one screen.
+// It appears after scrolling down more than one screen, and hides while
+// the message panel is open (they share the same corner).
 
 export function ScrollToTop() {
-  const [visible, setVisible] = useState(false);
+  const [scrolledDown, setScrolledDown] = useState(false);
+  const { isOpen: isPanelOpen } = useContact();
+  const visible = scrolledDown && !isPanelOpen;
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > window.innerHeight);
+    const onScroll = () => setScrolledDown(window.scrollY > window.innerHeight);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
