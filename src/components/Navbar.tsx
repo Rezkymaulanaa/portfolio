@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRightIcon } from "./icons";
 import { PillLink } from "./Pill";
@@ -12,6 +13,7 @@ import { PillLink } from "./Pill";
 // Desktop: expanded at the top of the page, collapsed after scrolling.
 // It expands again on mouse hover or keyboard focus.
 // Phones/tablets: always collapsed; tapping the dots opens a stacked menu.
+// Hidden on project detail pages.
 
 const NAV_LINKS = [
   { label: "Work", href: "/#work" },
@@ -44,6 +46,7 @@ export function Navbar({ availabilityLabel, isAvailable, contactEmail }: NavbarP
   const [focused, setFocused] = useState(false);
   const [tapped, setTapped] = useState(false);
 
+  const pathname = usePathname();
   const expanded = (isDesktop && atTop) || hovered || focused || tapped;
 
   // Desktop or not (the full bar only fits on large screens).
@@ -119,6 +122,9 @@ export function Navbar({ availabilityLabel, isAvailable, contactEmail }: NavbarP
   }
 
   const showBarStyle = expanded && atTop && isDesktop;
+
+  // Project detail pages (/work/<slug>) have no navbar, as in the design.
+  if (pathname.startsWith("/work/")) return null;
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-4 lg:top-10">
