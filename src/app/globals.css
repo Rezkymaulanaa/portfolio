@@ -13,27 +13,53 @@
   --color-surface: #ffffff; /* cards and white pills */
   --color-muted: #878787; /* secondary gray text (from the mockup) */
   --color-line: #bfbfbf; /* thin borders and dashed dividers */
-  --color-watermark: #e9e9e9; /* oversized faint words on light sections */
-  --color-watermark-dark: #232323; /* oversized faint words on dark sections */
+  --color-ghost: #e9e9e9; /* oversized faint words on light sections */
+  --color-ghost-dark: #232323; /* oversized faint words on dark sections */
   --color-available: #00d26a; /* green availability dot */
 
   /* Font (Poppins is loaded in layout.tsx with next/font) */
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
-  /* Radii: pills use rounded-full; cards use rounded-card */
-  --radius-card: 1rem;
-  --radius-frame: 1.5rem;
+  /* Layout */
+  --container-content: 73rem; /* 1168px content width at desktop */
 
-  /* Type scale (desktop sizes; responsive overrides happen in components) */
-  --text-hero: 8rem;
-  --text-hero--line-height: 0.95;
-  --text-hero--letter-spacing: 0.08em;
-  --text-watermark: 10rem;
+  /* Radii: pills use rounded-full; cards use rounded-card */
+  --radius-card: 0.5rem;
+  --radius-frame: 1rem;
+
+  /* Shadows */
+  --shadow-pill: 0 3px 4px rgb(0 0 0 / 0.16);
+  --shadow-float: 0 10px 24px rgb(0 0 0 / 0.12);
+
+  /*
+   * Type scale. Sizes are the desktop (1440px) sizes from the mockup;
+   * clamp() shrinks them smoothly on smaller screens.
+   */
+  --text-hero: clamp(3.25rem, 9vw, 8rem);
+  --text-hero--line-height: 1;
+  --text-watermark: clamp(2.75rem, 9.5vw, 8.75rem);
   --text-watermark--line-height: 1;
-  --text-section: 4rem;
+  --text-section: clamp(2.25rem, 5vw, 4.5rem);
   --text-section--line-height: 1.1;
-  --text-service: 3rem;
+  --text-cta: clamp(2rem, 5.8vw, 5.25rem);
+  --text-cta--line-height: 1.1;
+  --text-service: clamp(1.5rem, 3.6vw, 3.25rem);
   --text-service--line-height: 1.15;
+  --text-nav: clamp(1rem, 1.5vw, 1.375rem);
+  --text-nav--line-height: 1.4;
+  --text-pill: clamp(1rem, 1.6vw, 1.5rem);
+  --text-pill--line-height: 1.4;
+}
+
+/* Devices without hover (phones, tablets) */
+@custom-variant no-hover (@media (hover: none));
+
+/* Large screens with a mouse: used for hover-only layouts (service rows) */
+@custom-variant desk (@media (min-width: 64rem) and (hover: hover));
+
+:root {
+  /* Lets height/width animate to "auto" in browsers that support it. */
+  interpolate-size: allow-keywords;
 }
 
 html {

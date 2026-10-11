@@ -3,21 +3,9 @@ import { client } from "./client";
 
 const builder = createImageUrlBuilder(client);
 
-// Builds an image URL from a Sanity image field.
-// Example: urlFor(project.coverImage).width(800).url()
+// Builds an image URL from a Sanity image field (keeps crop and hotspot).
+// The width is added later by the image loader (image-loader.ts).
+// Example: <Image src={urlFor(project.coverImage)} ... />
 export function urlFor(source: SanityImageSource) {
-  return builder.image(source).auto("format");
-}
-
-// Tool icons may be SVG files. next/image cannot optimize SVG, so we ask
-// Sanity for a PNG version instead (2x size for sharp screens). "max" keeps
-// the whole logo visible; show it with object-contain in a square box.
-export function iconUrl(source: SanityImageSource, size: number) {
-  return builder
-    .image(source)
-    .width(size * 2)
-    .height(size * 2)
-    .fit("max")
-    .format("png")
-    .url();
+  return builder.image(source).url();
 }
