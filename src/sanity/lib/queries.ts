@@ -70,3 +70,13 @@ export const FEATURED_PROJECTS_QUERY = defineQuery(
 export const SERVICES_QUERY = defineQuery(
   `*[_type == "service"] | order(order asc){ _id, title, "slug": slug.current, description }`,
 );
+
+export type SkillGroup = {
+  _id: string;
+  title: string;
+  items: string[];
+};
+
+export const SKILL_GROUPS_QUERY = defineQuery(
+  `*[_type == "skillGroup"] | order(order asc){ _id, title, items }`,
+);

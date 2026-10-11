@@ -1,56 +1,70 @@
-// Temporary page for Phase 3: shows the shared components so they can be
-// checked in the browser. It will be replaced by the real home page in Phase 4.
-
-import { ProjectCard } from "@/components/ProjectCard";
+import { About } from "@/components/About";
+import { Capabilities } from "@/components/Capabilities";
+import { DashedDivider } from "@/components/DashedDivider";
+import { Hero } from "@/components/Hero";
+import { ArrowUpRightIcon } from "@/components/icons";
+import { PillLink } from "@/components/Pill";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ServiceList } from "@/components/ServiceList";
+import { WorkGrid } from "@/components/WorkGrid";
 import { sanityFetch } from "@/sanity/lib/client";
 import {
   FEATURED_PROJECTS_QUERY,
   SERVICES_QUERY,
+  SETTINGS_QUERY,
+  SKILL_GROUPS_QUERY,
   type ProjectCardData,
   type Service,
+  type SiteSettings,
+  type SkillGroup,
 } from "@/sanity/lib/queries";
 
-export default async function Home() {
-  const [projects, services] = await Promise.all([
+export default async function HomePage() {
+  const [settings, projects, services, skillGroups] = await Promise.all([
+    sanityFetch<SiteSettings>(SETTINGS_QUERY),
     sanityFetch<ProjectCardData[]>(FEATURED_PROJECTS_QUERY),
     sanityFetch<Service[]>(SERVICES_QUERY),
+    sanityFetch<SkillGroup[]>(SKILL_GROUPS_QUERY),
   ]);
 
   return (
     <>
-      <div className="flex h-[600px] items-end bg-ink/40 px-4 pb-10 sm:px-6">
-        <h1 className="mx-auto w-full max-w-content text-section font-bold text-page">
-          Phase 3 — component preview
-        </h1>
-      </div>
+      <Hero settings={settings} />
 
-      <section id="work" className="mx-auto max-w-content px-4 py-24 sm:px-6">
-        <SectionHeading watermark="Portfolio" title="Selected Work" align="center" />
-        <div className="mt-16 grid gap-3 sm:grid-cols-2">
-          {projects.map((project) => (
-            <ProjectCard key={project._id} project={project} />
-          ))}
+      <section
+        id="work"
+        aria-labelledby="work-heading"
+        className="mx-auto max-w-[76rem] scroll-mt-8 px-4 pt-20 pb-20 sm:px-6 lg:pt-28 lg:pb-40"
+      >
+        <SectionHeading id="work-heading" watermark="Portfolio" title="Selected Work" align="center" />
+        <div className="mt-8 lg:mt-12">
+          <WorkGrid
+            projects={projects}
+            action={
+              <PillLink href="/work" variant="outline" className="text-pill">
+                View All work <ArrowUpRightIcon />
+              </PillLink>
+            }
+          />
         </div>
       </section>
 
-      <section id="service" className="mx-auto max-w-content px-4 py-24 sm:px-6">
-        <SectionHeading watermark="Service" title="Service" />
-        <div className="mt-16">
+      <DashedDivider />
+
+      <section
+        id="service"
+        aria-labelledby="service-heading"
+        className="mx-auto max-w-content scroll-mt-8 px-4 py-20 sm:px-6 lg:pt-40 lg:pb-48"
+      >
+        <SectionHeading id="service-heading" watermark="Service" title="Service" />
+        <div className="mt-10 lg:mt-20">
           <ServiceList services={services} />
         </div>
       </section>
 
-      <section id="capabilities" className="bg-ink py-24">
-        <div className="mx-auto max-w-content px-4 sm:px-6">
-          <SectionHeading watermark="Capabilities" title="Main Skills & Tools" tone="dark" />
-        </div>
-      </section>
+      <Capabilities skillGroups={skillGroups} tools={settings.usualTools ?? []} />
 
-      <section id="about" className="mx-auto max-w-content px-4 py-24 sm:px-6">
-        <SectionHeading watermark="About" title="About Me" />
-      </section>
+      <About settings={settings} />
     </>
   );
 }

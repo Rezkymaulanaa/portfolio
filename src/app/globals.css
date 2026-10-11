@@ -21,7 +21,7 @@
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
   /* Layout */
-  --container-content: 73rem; /* 1168px content width at desktop */
+  --container-content: 78.75rem; /* 1260px incl. padding = 1211px content at desktop */
 
   /* Radii: pills use rounded-full; cards use rounded-card */
   --radius-card: 0.5rem;
@@ -35,7 +35,7 @@
    * Type scale. Sizes are the desktop (1440px) sizes from the mockup;
    * clamp() shrinks them smoothly on smaller screens.
    */
-  --text-hero: clamp(3.25rem, 9vw, 8rem);
+  --text-hero: clamp(3rem, 8.4vw, 7.6rem);
   --text-hero--line-height: 1;
   --text-watermark: clamp(2.75rem, 9.5vw, 8.75rem);
   --text-watermark--line-height: 1;
