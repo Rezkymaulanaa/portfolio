@@ -8,7 +8,8 @@ Everything listed here is a placeholder. Replace it in the Studio (`/studio`) or
 - [ ] Short descriptions for "Cyber Security - Web App", "Nala Heritage Mobile Apps", "Cyber Security - Web App" (2nd card) — only "Nala Mobile App" has one in the design.
 - [ ] Category for each of the 4 projects (seeded as: 2 × Real Project, 2 × Exploration — just a guess so the filter tabs work).
 - [ ] Timeline and tools for each project (only "Nala Mobile App" shows "4 Weeks", Canva + Figma).
-- [ ] Contact email for the "Let's Talk" buttons (now `your-email@example.com`).
+- [ ] Contact email shown in the message panel ("Copy email") — Studio → Site settings → Contact email (now `your-email@example.com`).
+- [ ] Set up Resend for the "Let's Talk" panel: add RESEND_API_KEY and CONTACT_TO_EMAIL to .env.local (and to Vercel in Phase 7).
 - [ ] LinkedIn and Instagram URLs (now the generic linkedin.com / instagram.com home pages).
 - [ ] "Live Preview" URL for Nala Mobile App (now `https://example.com`).
 - [ ] Project names and tags are inconsistent in the design ("Nala Mobile App - Design" vs "Nala Mobile App", "Mobile App" vs "Mobile Apps").
