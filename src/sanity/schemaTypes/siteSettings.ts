@@ -41,8 +41,26 @@ export const siteSettings = defineType({
     imageWithAlt({
       name: "heroImage",
       title: "Hero photo",
-      description: "Large photo on the right side of the hero.",
+      description:
+        "Large photo on the right side of the hero. With a video below, this photo shows while the video loads and for visitors who turn off animations, so use a still frame of the video.",
       required: true,
+      group: "hero",
+    }),
+    defineField({
+      name: "heroVideoWebm",
+      title: "Hero video (WebM)",
+      description:
+        "Optional. Replaces the photo with a looping, muted video. WebM is smaller; add the MP4 too for older iPhones/Safari. Keep it short (5–15 s), about 1920 px wide and under ~5 MB.",
+      type: "file",
+      options: { accept: "video/webm" },
+      group: "hero",
+    }),
+    defineField({
+      name: "heroVideoMp4",
+      title: "Hero video (MP4)",
+      description: "Optional. Same video as MP4 (H.264). Works in every browser.",
+      type: "file",
+      options: { accept: "video/mp4" },
       group: "hero",
     }),
     defineField({
@@ -81,6 +99,36 @@ export const siteSettings = defineType({
       title: "About photo",
       group: "about",
     }),
+    defineField({
+      name: "photoGrid",
+      title: "Photo grid",
+      description: "4 portrait photos shown in a row below the Education section. Hidden while empty.",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt text",
+              type: "string",
+              validation: (rule) => rule.required().error("Alt text is required."),
+            }),
+          ],
+        }),
+      ],
+      validation: (rule) => rule.max(4),
+      group: "about",
+    }),
+    defineField({
+      name: "cvFile",
+      title: "CV file",
+      description: "PDF for the “Download CV” button in the About section. The button is hidden until a file is added.",
+      type: "file",
+      options: { accept: ".pdf" },
+      group: "about",
+    }),
 
     // Contact & CTA
     defineField({
@@ -100,6 +148,12 @@ export const siteSettings = defineType({
     defineField({
       name: "instagramUrl",
       title: "Instagram URL",
+      type: "url",
+      group: "contact",
+    }),
+    defineField({
+      name: "githubUrl",
+      title: "GitHub URL",
       type: "url",
       group: "contact",
     }),

@@ -125,7 +125,7 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
   if (pathname === "/work" || pathname.startsWith("/work/")) return null;
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-4 lg:top-10">
+    <header className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-4 lg:top-5">
       <nav
         ref={navRef}
         aria-label="Main"
@@ -137,8 +137,8 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
           "pointer-events-auto relative overflow-hidden rounded-[2.5rem] border",
           "transition-[width,height,background-color,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
           expanded
-            ? "h-auto w-full max-w-sm lg:h-[5.625rem] lg:max-w-[82.5rem]"
-            : "h-14 w-24 lg:h-[4.75rem] lg:w-28",
+            ? "h-auto w-full max-w-sm lg:h-[4.25rem] lg:max-w-[82.5rem]"
+            : "h-11 w-[4.5rem] lg:h-[3.75rem] lg:w-24",
           showBarStyle
             ? "border-white/70 bg-white/25 backdrop-blur-md"
             : "border-line/40 bg-page/95 shadow-float backdrop-blur-md",
@@ -151,12 +151,16 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
           aria-label="Open navigation"
           aria-expanded={expanded}
           aria-controls="main-menu"
-          className={`absolute inset-x-0 top-0 flex h-14 items-center justify-center text-2xl leading-none tracking-[0.1em] transition-opacity duration-200 focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-ink motion-reduce:transition-none lg:h-[4.75rem] ${
+          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-ink motion-reduce:transition-none ${
             expanded ? "pointer-events-none opacity-0" : "opacity-100"
           }`}
         >
-          <span aria-hidden="true" className="-mt-2 font-bold">
-            ••••
+          {/* Four real circles (not "••••" text), so they sit exactly in the middle.
+              Whole-pixel sizes keep them crisp (rem is scaled on desktop). */}
+          <span aria-hidden="true" className="flex items-center gap-[5px] 2xl:gap-1.5">
+            {[0, 1, 2, 3].map((dot) => (
+              <span key={dot} className="size-1.5 rounded-full bg-ink lg:size-[7px] 2xl:size-2" />
+            ))}
           </span>
         </button>
 
@@ -165,7 +169,7 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
           id="main-menu"
           className={[
             "flex flex-col items-stretch gap-3 p-4",
-            "lg:h-full lg:w-[min(calc(82.5rem_-_2px),calc(100vw_-_2rem_-_2px))] lg:flex-row lg:items-center lg:justify-between lg:gap-4 lg:px-6 lg:py-0",
+            "lg:h-full lg:w-[min(calc(82.5rem_-_2px),calc(100vw_-_2rem_-_2px))] lg:flex-row lg:items-center lg:justify-between lg:gap-4 lg:px-3.5 lg:py-0",
             "transition-opacity motion-reduce:transition-none",
             expanded
               ? "opacity-100 delay-150 duration-300"
@@ -173,8 +177,8 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
           ].join(" ")}
         >
           {isAvailable && availabilityLabel && (
-            <p className="flex items-center gap-3 self-start rounded-full border border-line/60 bg-page px-5 py-2 text-nav shadow-pill lg:self-auto">
-              <span aria-hidden="true" className="size-4 shrink-0 rounded-full bg-available lg:size-5" />
+            <p className="flex items-center gap-3 self-start rounded-full border border-line/60 bg-page px-5 py-2 text-nav shadow-pill lg:gap-2 lg:self-auto lg:px-3.5 lg:py-1.5 lg:text-small">
+              <span aria-hidden="true" className="size-4 shrink-0 rounded-full bg-available lg:size-3" />
               {availabilityLabel}
             </p>
           )}
@@ -185,7 +189,7 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
                 <SectionLink
                   href={link.href}
                   onClick={closeMenu}
-                  className="block rounded-full px-1 py-2 text-nav transition-opacity hover:opacity-60 focus-visible:outline-2 focus-visible:outline-ink"
+                  className="block rounded-full px-1 py-2 text-nav transition-opacity lg:text-small hover:opacity-60 focus-visible:outline-2 focus-visible:outline-ink"
                 >
                   {link.label}
                 </SectionLink>
@@ -196,7 +200,7 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
           <LetsTalkButton
             variant="dark"
             onClick={closeMenu}
-            className="self-start text-nav lg:self-auto"
+            className="self-start text-nav lg:self-auto lg:text-small"
           />
         </div>
       </nav>

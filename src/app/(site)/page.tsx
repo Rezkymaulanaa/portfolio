@@ -1,6 +1,7 @@
 import { About } from "@/components/About";
 import { Capabilities } from "@/components/Capabilities";
 import { DashedDivider } from "@/components/DashedDivider";
+import { Education } from "@/components/Education";
 import { Hero } from "@/components/Hero";
 import { ArrowUpRightIcon } from "@/components/icons";
 import { PillLink } from "@/components/Pill";
@@ -65,6 +66,8 @@ export default async function HomePage() {
       <Capabilities skillGroups={skillGroups} tools={settings.usualTools ?? []} />
 
       <About settings={settings} />
+
+      <Education photos={settings.photoGrid} />
     </>
   );
 }

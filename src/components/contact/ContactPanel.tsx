@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { sendMessage, type SendMessageState } from "@/lib/send-message";
+import { getFormToken, sendMessage, type SendMessageState } from "@/lib/send-message";
 import { ArrowUpRightIcon, UserCircleIcon } from "../icons";
 import { pillClasses } from "../Pill";
 import { useContact } from "./ContactProvider";
@@ -25,6 +25,8 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
   const [dismissedState, setDismissedState] = useState<SendMessageState | null>(null);
   const [formKey, setFormKey] = useState(0);
   const firstFieldRef = useRef<HTMLInputElement>(null);
+  // Signed time token for the spam check (see send-message.ts).
+  const [token, setToken] = useState("");
 
   const isSuccess = state.status === "success" && state !== dismissedState;
 
@@ -39,6 +41,21 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [isOpen, close]);
 
+  // A fresh token whenever the panel opens and after every answer.
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    getFormToken().then(
+      (fresh) => {
+        if (!cancelled) setToken(fresh);
+      },
+      () => {},
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, state, formKey]);
+
   const fields = state.status === "error" ? state.fields : undefined;
 
   return (
@@ -47,37 +64,42 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
       aria-labelledby="contact-panel-title"
       aria-hidden={!isOpen}
       inert={!isOpen}
-      className={`fixed inset-x-3 bottom-3 z-[55] flex max-h-[calc(100svh-1.5rem)] flex-col overflow-hidden rounded-frame bg-surface shadow-float ring-1 ring-line/50 transition duration-300 motion-reduce:transition-none sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[24rem] lg:w-[30rem] ${
-        isOpen ? "visible translate-y-0 opacity-100" : "invisible translate-y-4 opacity-0"
+      className={`fixed inset-x-3 bottom-3 z-[55] flex max-h-[calc(100svh-1.5rem)] flex-col overflow-hidden rounded-frame border border-line/60 bg-surface shadow-float transition duration-300 ease-out motion-reduce:transition-none sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[23rem] lg:w-[27rem] ${
+        isOpen ? "visible translate-y-0 scale-100 opacity-100" : "invisible translate-y-3 scale-[0.98] opacity-0"
       }`}
     >
       {/* Header */}
-      <div className="flex items-center gap-3 bg-ink px-4 py-3 text-page">
-        <UserCircleIcon className="size-9 shrink-0" />
+      <div className="flex items-center gap-3 border-b border-line/60 px-5 py-3.5">
+        <span className="relative shrink-0">
+          <UserCircleIcon className="size-9 text-ink" />
+          <span
+            aria-hidden="true"
+            className="absolute right-0 bottom-0 size-2.5 rounded-full bg-available ring-2 ring-surface"
+          />
+        </span>
         <div className="min-w-0 flex-1">
-          <p id="contact-panel-title" className="font-semibold lg:text-lg">
+          <p id="contact-panel-title" className="text-small leading-tight font-semibold">
             {ownerName}
           </p>
-          <p className="flex items-center gap-1.5 text-xs lg:text-sm text-page/75">
-            <span aria-hidden="true" className="size-2 rounded-full bg-available" />
-            Usually replies within 1–2 days
-          </p>
+          <p className="text-label text-muted">Usually replies within 1–2 days</p>
         </div>
         <button
           type="button"
           onClick={close}
           aria-label="Close message panel"
-          className="flex size-9 items-center justify-center rounded-full text-xl leading-none transition hover:bg-page/15 focus-visible:outline-2 focus-visible:outline-page"
+          className="flex size-9 cursor-pointer items-center justify-center rounded-full text-muted transition hover:bg-page hover:text-ink focus-visible:outline-2 focus-visible:outline-ink"
         >
-          <span aria-hidden="true">×</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" className="size-4" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
         </button>
       </div>
 
       {/* Conversation */}
-      <div className="flex-1 space-y-3 overflow-y-auto bg-page px-4 py-4">
+      <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
         <ChatBubble>
-          Hi! 👋 Tell me a bit about your project or idea. Your message goes straight to my
-          email, and I&apos;ll reply to you there.
+          Hi! Tell me a bit about your project or idea. Your message goes straight to my email,
+          and I&apos;ll reply to you there.
         </ChatBubble>
 
         {isSuccess && state.status === "success" ? (
@@ -93,31 +115,33 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
                 setDismissedState(state);
                 setFormKey((key) => key + 1);
               }}
-              className={pillClasses("outline", "text-[0.95rem] lg:text-[1.1rem]")}
+              className={pillClasses("outline", "cursor-pointer text-label")}
             >
               Send another message
             </button>
           </>
         ) : (
           <form key={formKey} action={formAction} className="space-y-3" noValidate>
-            <Field label="Your name">
+            <Field label="Name">
               <input
                 ref={firstFieldRef}
                 name="name"
                 required
                 maxLength={100}
                 autoComplete="name"
+                placeholder="Your name"
                 defaultValue={fields?.name}
                 className={inputClasses}
               />
             </Field>
-            <Field label="Your email">
+            <Field label="Email">
               <input
                 name="email"
                 type="email"
                 required
                 maxLength={200}
                 autoComplete="email"
+                placeholder="you@email.com"
                 defaultValue={fields?.email}
                 className={inputClasses}
               />
@@ -129,10 +153,13 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
                 rows={4}
                 minLength={10}
                 maxLength={5000}
+                placeholder="What are you working on?"
                 defaultValue={fields?.message}
                 className={`${inputClasses} resize-none`}
               />
             </Field>
+
+            <input type="hidden" name="token" value={token} />
 
             {/* Spam trap: hidden from people, bots tend to fill it in. */}
             <div aria-hidden="true" className="hidden">
@@ -143,7 +170,7 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
             </div>
 
             {state.status === "error" && (
-              <p role="alert" className="rounded-card bg-surface px-3 py-2 text-[0.95rem] lg:text-[1.1rem] text-ink ring-1 ring-line">
+              <p role="alert" className="rounded-card bg-page px-3 py-2 text-label text-ink">
                 {state.message} You can also email me directly at{" "}
                 <CopyEmailButton email={contactEmail} />.
               </p>
@@ -151,8 +178,13 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
 
             <button
               type="submit"
-              disabled={isPending}
-              className={pillClasses("accent", "w-full cursor-pointer text-base disabled:cursor-wait disabled:opacity-70 lg:text-[1.2rem]")}
+              // Also waits for the spam-check token, otherwise the message
+              // would be treated as a bot and silently dropped.
+              disabled={isPending || !token}
+              className={pillClasses(
+                "dark",
+                "w-full cursor-pointer py-[0.75em] text-small font-medium disabled:cursor-wait disabled:opacity-70",
+              )}
             >
               {isPending ? "Sending…" : "Send message"} {!isPending && <ArrowUpRightIcon />}
             </button>
@@ -161,19 +193,21 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
       </div>
 
       {/* Fallback */}
-      <p className="border-t border-line/50 px-4 py-2.5 text-center text-xs lg:text-sm text-muted">
+      <p className="border-t border-line/60 px-5 py-3 text-center text-label text-muted">
         Prefer email? <CopyEmailButton email={contactEmail} />
       </p>
     </div>
   );
 }
 
+// Phones keep inputs at 16px (text-body), otherwise iOS zooms in on focus.
+// Larger screens use the smaller text-small.
 const inputClasses =
-  "mt-1 block w-full rounded-card border border-line bg-surface px-3 py-2 text-[0.95rem] lg:text-[1.1rem] text-ink outline-none transition focus:border-ink focus:ring-1 focus:ring-ink";
+  "mt-1 block w-full rounded-card border border-transparent bg-page px-3 py-2 text-body leading-normal sm:text-small sm:leading-normal text-ink outline-none transition placeholder:text-muted/70 hover:border-line focus:border-ink focus:bg-surface";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label className="block text-[0.95rem] lg:text-[1.1rem] font-medium">
+    <label className="block text-label font-medium text-ink">
       {label}
       {children}
     </label>
@@ -183,8 +217,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function ChatBubble({ children, fromVisitor = false }: { children: React.ReactNode; fromVisitor?: boolean }) {
   return (
     <p
-      className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[0.95rem] lg:text-[1.1rem] leading-relaxed ${
-        fromVisitor ? "ml-auto rounded-br-sm bg-accent text-ink" : "rounded-bl-sm bg-surface text-ink shadow-sm"
+      className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-[1.55] ${
+        fromVisitor ? "ml-auto rounded-br-md bg-ink text-page" : "rounded-bl-md bg-page text-ink"
       }`}
     >
       {children}
@@ -211,7 +245,7 @@ function CopyEmailButton({ email }: { email: string }) {
       type="button"
       onClick={copy}
       title={email}
-      className="cursor-pointer font-medium text-ink underline underline-offset-2 hover:no-underline"
+      className="cursor-pointer font-medium text-ink underline decoration-line underline-offset-4 transition hover:decoration-ink"
     >
       {copied ? "Copied!" : `Copy ${email}`}
     </button>

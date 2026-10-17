@@ -24,8 +24,11 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
         availabilityLabel={settings.availabilityLabel}
         isAvailable={settings.isAvailable}
       />
-      <main id="main" className="flex-1">{children}</main>
-      <CtaFooter settings={settings} />
+      {/* Stops the page from scrolling sideways on phones (see globals.css). */}
+      <div className="flex flex-1 flex-col" style={{ overflowX: "clip" }}>
+        <main id="main" className="flex-1">{children}</main>
+        <CtaFooter settings={settings} />
+      </div>
       <ScrollToTop />
     </ContactProvider>
   );

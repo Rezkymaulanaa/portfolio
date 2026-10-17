@@ -23,18 +23,23 @@ export default async function NotFound() {
         availabilityLabel={settings.availabilityLabel}
         isAvailable={settings.isAvailable}
       />
-      <main id="main" className="flex-1">
-        <section className="mx-auto max-w-content px-gutter pt-36 text-center lg:pt-56">
-          <SectionHeading as="h1" watermark="404" title="Page not found" align="center" />
-          <p className="mx-auto mt-6 max-w-xl text-lg lg:text-2xl">
-            The page you are looking for does not exist or has been moved.
-          </p>
-          <PillLink href="/" variant="accent" className="mt-10 text-pill">
-            <ArrowLeftIcon /> Back to home
-          </PillLink>
-        </section>
-      </main>
-      <CtaFooter settings={settings} />
+      {/* Stops the page from scrolling sideways on phones (see globals.css). */}
+      <div className="flex flex-1 flex-col" style={{ overflowX: "clip" }}>
+        <main id="main" className="flex-1">
+          <section className="mx-auto max-w-content px-gutter pt-36 text-center lg:pt-56">
+            <SectionHeading as="h1" watermark="404" title="Page not found" align="center" />
+            <p className="reveal mx-auto mt-6 max-w-xl text-lead">
+              The page you are looking for does not exist or has been moved.
+            </p>
+            <div className="reveal mt-10">
+              <PillLink href="/" variant="accent" className="text-pill">
+                <ArrowLeftIcon /> Back to home
+              </PillLink>
+            </div>
+          </section>
+        </main>
+        <CtaFooter settings={settings} />
+      </div>
     </ContactProvider>
   );
 }

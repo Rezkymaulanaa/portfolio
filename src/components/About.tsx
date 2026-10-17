@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import type { SiteSettings } from "@/sanity/lib/queries";
-import { LetsTalkButton } from "./contact/ContactProvider";
+import { DownloadIcon } from "./icons";
+import { pillClasses } from "./Pill";
 import { SectionHeading } from "./SectionHeading";
 
 // "About Me" section (not in the original design; built in the same style).
@@ -25,9 +26,9 @@ export function About({ settings }: { settings: SiteSettings }) {
 
         {/* On desktop the photo height follows the screen height, so the whole
             section fits in one screen. */}
-        <div className="reveal mt-10 grid items-center gap-8 lg:mt-[clamp(1.5rem,5svh,4rem)] lg:grid-cols-[5fr_7fr] lg:gap-16">
+        <div className="mt-10 grid items-center gap-8 lg:mt-[clamp(1.5rem,5svh,4rem)] lg:grid-cols-[5fr_7fr] lg:gap-16">
           {settings.aboutImage && (
-            <div className="rounded-frame bg-surface p-3 lg:p-4">
+            <div data-from="clip" className="reveal reveal-zoom rounded-frame bg-surface p-3 lg:p-4">
               <div className="relative aspect-[4/5] overflow-hidden rounded-card bg-page lg:aspect-auto lg:h-[clamp(20rem,52svh,34rem)]">
                 <Image
                   src={urlFor(settings.aboutImage)}
@@ -41,12 +42,22 @@ export function About({ settings }: { settings: SiteSettings }) {
           )}
 
           <div>
-            <div className="space-y-5 text-base leading-relaxed lg:text-[clamp(1.125rem,2.8svh,1.5rem)] lg:leading-normal">
+            <div className="max-w-[40rem] space-y-5 text-lead">
               {paragraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
+                <p key={paragraph} data-from="right" className="reveal">
+                  {paragraph}
+                </p>
               ))}
             </div>
-            <LetsTalkButton variant="dark" className="mt-8 text-pill lg:mt-12" />
+            {/* "?dl=" makes the Sanity CDN send the file as a download
+                (the download attribute alone is ignored for other domains). */}
+            {settings.cvUrl && (
+              <div className="reveal mt-8 lg:mt-12">
+                <a href={`${settings.cvUrl}?dl=`} download className={pillClasses("dark", "text-pill")}>
+                  Download CV <DownloadIcon />
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>

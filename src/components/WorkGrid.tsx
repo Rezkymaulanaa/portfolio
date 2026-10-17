@@ -30,7 +30,7 @@ export function WorkGrid({ projects, action }: WorkGridProps) {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <ul className="flex flex-wrap gap-x-6 gap-y-2 text-pill lg:gap-x-10" aria-label="Filter projects">
+        <ul data-from="left" className="reveal flex flex-wrap gap-x-6 gap-y-2 text-pill lg:gap-x-10" aria-label="Filter projects">
           {FILTERS.map((item) => (
             <li key={item.value}>
               <button
@@ -46,13 +46,17 @@ export function WorkGrid({ projects, action }: WorkGridProps) {
             </li>
           ))}
         </ul>
-        {action}
+        {action && (
+          <div data-from="right" className="reveal">
+            {action}
+          </div>
+        )}
       </div>
 
       {visible.length > 0 ? (
-        <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:mt-14">
+        <ul className="mt-8 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:mt-14 lg:gap-y-16">
           {visible.map((project) => (
-            <li key={project._id} className="reveal">
+            <li key={project._id} data-from="scale" className="reveal">
               <ProjectCard project={project} />
             </li>
           ))}

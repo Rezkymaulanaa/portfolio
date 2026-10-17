@@ -18,10 +18,12 @@ export default async function WorkPage() {
   const projects = await sanityFetch<ProjectCardData[]>(ALL_PROJECTS_QUERY);
 
   return (
-    <section className="mx-auto max-w-work px-gutter pt-10 pb-20 lg:pt-16 lg:pb-16">
-      <BackLink fallbackHref="/" className={pillClasses("outline", "text-pill")}>
-        <ArrowLeftIcon /> Back
-      </BackLink>
+    <section className="mx-auto max-w-work px-gutter pt-10 lg:pt-16">
+      <div className="reveal">
+        <BackLink fallbackHref="/" className={pillClasses("outline", "text-pill")}>
+          <ArrowLeftIcon /> Back
+        </BackLink>
+      </div>
 
       <div className="mt-8 lg:mt-10">
         <SectionHeading as="h1" watermark="Portfolio" title="All Work" align="center" />

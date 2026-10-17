@@ -14,7 +14,7 @@ export function ServiceList({ services }: { services: Service[] }) {
   return (
     <ul onPointerLeave={() => setActiveId(null)}>
       {services.map((service) => (
-        <li key={service._id} className="reveal">
+        <li key={service._id} data-from="left" className="reveal">
           <ServiceRow
             service={service}
             active={activeId === service._id}
@@ -53,7 +53,7 @@ export function ServiceRow({ service, active, onActivate, onDeactivate }: Servic
 
       {/* Desktop with hover: description fades in. Space is always reserved. */}
       <p
-        className={`col-span-2 row-start-2 mt-2 text-sm text-ink/80 desk:col-span-1 desk:row-start-auto desk:mt-0 desk:text-xl desk:leading-snug desk:text-ink ${
+        className={`col-span-2 row-start-2 mt-2 text-sm text-ink/80 desk:col-span-1 desk:row-start-auto desk:mt-0 desk:text-lead desk:text-ink ${
           active ? "desk:translate-y-0 desk:opacity-100" : "desk:translate-y-1 desk:opacity-0"
         } transition duration-300 motion-reduce:transition-none`}
       >

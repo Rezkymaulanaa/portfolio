@@ -57,6 +57,23 @@ type LetsTalkButtonProps = {
   onClick?: () => void;
 };
 
+// Unstyled button that opens the message panel (e.g. the big footer heading).
+export function LetsTalkTrigger({ className, children }: { className?: string; children: ReactNode }) {
+  const { isOpen, open } = useContact();
+
+  return (
+    <button
+      type="button"
+      aria-haspopup="dialog"
+      aria-expanded={isOpen}
+      onClick={(event) => open(event.currentTarget)}
+      className={className}
+    >
+      {children}
+    </button>
+  );
+}
+
 // Pill button that opens the message panel.
 export function LetsTalkButton({ variant, className, onClick }: LetsTalkButtonProps) {
   const { isOpen, open } = useContact();

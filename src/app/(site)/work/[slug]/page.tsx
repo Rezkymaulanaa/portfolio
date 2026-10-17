@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { BackLink } from "@/components/BackLink";
+import { CaseStudy } from "@/components/case-study/CaseStudy";
+import { DetailImage } from "@/components/DetailImage";
 import { notFound } from "next/navigation";
 import { DashedDivider } from "@/components/DashedDivider";
 import { ArrowLeftIcon, ArrowUpRightIcon } from "@/components/icons";
@@ -16,7 +18,6 @@ import {
   PROJECT_SLUGS_QUERY,
   type ProjectCardData,
   type ProjectDetail,
-  type SizedImage,
 } from "@/sanity/lib/queries";
 
 // Build a page for every project at deploy time. New projects published
@@ -45,22 +46,22 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
 
   if (!project) notFound();
 
-  const images = [project.coverImage, ...(project.gallery ?? [])];
-
   return (
     <>
       <article className="relative overflow-x-clip">
         <DetailStroke />
 
         <div className="relative mx-auto max-w-work px-gutter pt-10 lg:pt-16">
-          <BackLink fallbackHref="/work" className={pillClasses("outline", "text-pill")}>
-            <ArrowLeftIcon /> Back
-          </BackLink>
+          <div className="reveal">
+            <BackLink fallbackHref="/work" className={pillClasses("outline", "text-pill")}>
+              <ArrowLeftIcon /> Back
+            </BackLink>
+          </div>
 
           <header className="mt-10 flex flex-col gap-10 lg:mt-[4.5rem] lg:flex-row lg:justify-between">
             <div className="max-w-[42rem]">
               {project.tags && project.tags.length > 0 && (
-                <ul className="flex flex-wrap gap-3">
+                <ul data-from="down" className="reveal flex flex-wrap gap-3">
                   {project.tags.map((tag) => (
                     <li key={tag}>
                       <Tag large>{tag}</Tag>
@@ -68,21 +69,18 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
                   ))}
                 </ul>
               )}
-              <h1 className="mt-5 text-section font-semibold lg:mt-8">{project.title}</h1>
+              <h1 className="reveal mt-5 text-section font-semibold lg:mt-8">{project.title}</h1>
               {project.shortDescription && (
-                <p className="mt-3 max-w-[34rem] text-lg leading-tight text-muted lg:mt-5 lg:text-2xl">
+                <p className="reveal mt-3 max-w-[34rem] text-lead text-muted lg:mt-5">
                   {project.shortDescription}
                 </p>
               )}
               {project.livePreviewUrl && (
-                <PillLink
-                  href={project.livePreviewUrl}
-                  variant="dark"
-                  external
-                  className="mt-8 text-pill lg:mt-10"
-                >
-                  Live Preview <ArrowUpRightIcon />
-                </PillLink>
+                <div className="reveal mt-8 lg:mt-10">
+                  <PillLink href={project.livePreviewUrl} variant="dark" external className="text-pill">
+                    Live Preview <ArrowUpRightIcon />
+                  </PillLink>
+                </div>
               )}
             </div>
 
@@ -90,12 +88,12 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
               {project.service && <MetaItem label="Service">{project.service}</MetaItem>}
               {project.timeline && <MetaItem label="Timeline">{project.timeline}</MetaItem>}
               {project.tools && project.tools.length > 0 && (
-                <MetaItem label="Tools">
-                  <ul className="mt-1 flex gap-4 lg:justify-end">
+                <MetaItem label="Tools" className="col-span-full">
+                  <ul className="mt-1 flex flex-wrap gap-3 sm:gap-4 lg:justify-end">
                     {project.tools.map((tool) => (
                       <li
                         key={tool._id}
-                        className="flex size-14 items-center justify-center rounded-md border border-line bg-surface p-2 shadow-pill lg:size-[5.125rem] lg:p-3"
+                        className="flex size-14 shrink-0 items-center justify-center rounded-md border border-line bg-surface p-2 shadow-pill lg:size-[5.125rem] lg:p-3"
                       >
                         <Image
                           src={urlFor(tool.icon)}
@@ -113,11 +111,42 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
             </dl>
           </header>
 
-          <div className="mt-12 space-y-6 lg:mt-20">
-            {images.map((image, index) => (
-              <ProjectImage key={image._key ?? image.asset._ref} image={image} preload={index === 0} />
-            ))}
+          {project.facts && project.facts.length > 0 && (
+            <dl className="mt-12 grid gap-6 border-y border-line py-6 sm:grid-cols-2 lg:mt-16 lg:auto-cols-fr lg:grid-flow-col lg:py-8">
+              {project.facts.map((fact) => (
+                <div key={fact._key} className="reveal">
+                  <dt className="text-label font-semibold uppercase tracking-[0.2em] text-muted">{fact.label}</dt>
+                  <dd className="mt-1 text-h4 font-medium">{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+
+          <div className="mt-12 lg:mt-16">
+            <DetailImage
+              image={project.coverImage}
+              mockup={project.coverStyle}
+              extraImages={project.coverImages}
+              displayWidth={1104}
+              preload
+            />
           </div>
+
+          {project.content && project.content.length > 0 && <CaseStudy blocks={project.content} />}
+
+          {project.gallery && project.gallery.length > 0 && (
+            <div className={`space-y-6 ${project.content?.length ? "mt-20 lg:mt-28" : "mt-6"}`}>
+              {project.gallery.map((image) => (
+                <DetailImage
+                  key={image._key ?? image.asset._ref}
+                  image={image}
+                  mockup={image.mockup}
+                  extraImages={image.mockupImages}
+                  displayWidth={1104}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </article>
 
@@ -131,7 +160,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
             className="mx-auto max-w-work px-gutter pt-16 pb-4 lg:pt-24"
           >
             <SectionHeading id="more-work-heading" title="More Work" align="center" />
-            <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-16">
+            <ul className="mt-10 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:mt-16">
               {moreProjects.map((item) => (
                 <li key={item._id} className="reveal">
                   <ProjectCard project={item} />
@@ -145,45 +174,35 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
   );
 }
 
-function MetaItem({ label, children }: { label: string; children: React.ReactNode }) {
+function MetaItem({
+  label,
+  className = "",
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div>
-      <dt className="text-base text-muted lg:text-2xl">{label}</dt>
-      <dd className="text-xl lg:text-[2.125rem] lg:leading-tight">{children}</dd>
+    <div data-from="right" className={`reveal ${className}`}>
+      <dt className="text-small text-muted">{label}</dt>
+      <dd className="text-h3">{children}</dd>
     </div>
   );
 }
 
-// Main image and gallery images, each in a white rounded frame.
-function ProjectImage({ image, preload }: { image: SizedImage; preload: boolean }) {
-  const width = image.dimensions?.width ?? 1600;
-  const height = image.dimensions?.height ?? 1200;
-
-  return (
-    <figure className="reveal rounded-frame border border-line/40 bg-surface/70 p-3 shadow-pill sm:p-5 lg:p-8">
-      <Image
-        src={urlFor(image)}
-        alt={image.alt ?? ""}
-        width={width}
-        height={height}
-        preload={preload}
-        sizes="(min-width: 1216px) 1104px, 100vw"
-        className="h-auto w-full"
-      />
-    </figure>
-  );
-}
-
-// Gray decorative brush line that crosses behind the header.
+// Faint decorative brush line. It is moved down so its loop sits behind the
+// cover image (which hides it) instead of crossing the header text.
 function DetailStroke() {
   return (
     <svg
       viewBox="0 0 1440 1400"
       fill="none"
       aria-hidden="true"
-      className="pointer-events-none absolute top-0 left-1/2 hidden w-[90rem] max-w-none -translate-x-1/2 overflow-visible text-ink/40 lg:block"
+      className="pointer-events-none absolute top-0 left-1/2 hidden w-[90rem] max-w-none -translate-x-1/2 overflow-visible text-ink/15 lg:block"
     >
       <path
+        transform="translate(0 420)"
         d="M-1000 324L-20 520C180 560 400 610 560 628C700 644 700 570 640 545C560 512 470 520 505 590C540 660 640 690 760 760C960 880 1200 1180 1460 1290L2400 1688"
         stroke="currentColor"
         strokeWidth="17"

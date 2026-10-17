@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { caseStudyFields } from "./caseStudy";
 import { imageWithAlt } from "./imageWithAlt";
+import { MOCKUP_SIZE_HINT, mockupField, mockupImagesField } from "./mockup";
 
 export const PROJECT_CATEGORIES = [
   { title: "Real Project", value: "real-project" },
@@ -77,13 +79,23 @@ export const project = defineType({
     imageWithAlt({
       name: "coverImage",
       title: "Cover image",
-      description: "Main image used on the card and at the top of the detail page.",
+      description: `Main image used on the card and at the top of the detail page. ${MOCKUP_SIZE_HINT}`,
       required: true,
+    }),
+    mockupField({
+      name: "coverStyle",
+      title: "Cover mockup",
+      description:
+        "How the cover image is shown on the project card and at the top of the detail page. A mockup puts the image inside a device.",
+    }),
+    mockupImagesField({
+      name: "coverImages",
+      getMockup: ({ document }) => (document as { coverStyle?: string } | undefined)?.coverStyle,
     }),
     defineField({
       name: "gallery",
       title: "Gallery",
-      description: "Extra images shown below the cover on the detail page (optional).",
+      description: `Extra images shown below the cover on the detail page (optional). ${MOCKUP_SIZE_HINT}`,
       type: "array",
       of: [
         defineArrayMember({
@@ -96,10 +108,16 @@ export const project = defineType({
               type: "string",
               validation: (rule) => rule.required().error("Alt text is required."),
             }),
+            mockupField({ name: "mockup", title: "Mockup", description: "Show this image inside a device." }),
+            mockupImagesField({
+              name: "mockupImages",
+              getMockup: ({ parent }) => (parent as { mockup?: string } | undefined)?.mockup,
+            }),
           ],
         }),
       ],
     }),
+    ...caseStudyFields,
     defineField({
       name: "livePreviewUrl",
       title: "Live preview URL",
