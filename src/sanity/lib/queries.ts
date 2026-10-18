@@ -121,6 +121,13 @@ export const PROJECT_SLUGS_QUERY = defineQuery(
   `*[_type == "project" && defined(slug.current)].slug.current`,
 );
 
+// For the sitemap: every project page with the time it was last changed.
+export type SitemapProject = { slug: string; _updatedAt: string };
+
+export const SITEMAP_PROJECTS_QUERY = defineQuery(
+  `*[_type == "project" && defined(slug.current)] | order(order asc){ "slug": slug.current, _updatedAt }`,
+);
+
 // Image with its width/height, so the page does not jump while it loads.
 export type SizedImage = SanityImage & {
   _key?: string;
