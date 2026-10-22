@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import type { SiteSettings } from "@/sanity/lib/queries";
 import { SplitText } from "./SplitText";
 
@@ -7,7 +9,8 @@ import { SplitText } from "./SplitText";
 // with the university name on the left and the degree + GPA on the right,
 // followed by a row of 4 photos from the Studio.
 
-export function Education({ photos = [] }: { photos?: SiteSettings["photoGrid"] }) {
+export function Education({ photos = [], lang }: { photos?: SiteSettings["photoGrid"]; lang: Locale }) {
+  const t = getDictionary(lang).education;
   return (
     <section
       id="education"
@@ -21,10 +24,10 @@ export function Education({ photos = [] }: { photos?: SiteSettings["photoGrid"] 
               id="education-heading"
               className="text-label font-semibold uppercase tracking-[0.25em] text-accent"
             >
-              /Education
+              {t.title}
             </h2>
             <p className="text-label font-medium uppercase tracking-[0.2em] text-page/70">
-              Graduated · 2026
+              {t.graduated}
             </p>
           </div>
 
@@ -32,12 +35,12 @@ export function Education({ photos = [] }: { photos?: SiteSettings["photoGrid"] 
             <SplitText as="p" text="Universitas Hasanuddin" lines className="text-section font-semibold uppercase" />
 
             <div data-from="right" className="reveal border-t border-page/30 pt-6">
-              <p className="text-label uppercase tracking-[0.2em] text-page/70">Bachelor&apos;s Degree</p>
-              <p className="mt-2 text-h3 font-semibold">Information Systems</p>
+              <p className="text-label uppercase tracking-[0.2em] text-page/70">{t.degreeLevel}</p>
+              <p className="mt-2 text-h3 font-semibold">{t.major}</p>
             </div>
 
             <div data-from="scale" className="reveal w-full rounded-card bg-accent p-6 text-ink sm:w-auto sm:min-w-56 lg:p-7">
-              <p className="text-label font-semibold uppercase tracking-[0.2em]">GPA</p>
+              <p className="text-label font-semibold uppercase tracking-[0.2em]">{t.gpa}</p>
               <p className="mt-3 flex items-baseline gap-1">
                 <span className="text-6xl font-semibold leading-none lg:text-7xl">3.76</span>
                 <span className="text-lead font-medium">/4.00</span>

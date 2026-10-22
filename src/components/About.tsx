@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import type { SiteSettings } from "@/sanity/lib/queries";
 import { DownloadIcon } from "./icons";
 import { pillClasses } from "./Pill";
@@ -8,7 +10,8 @@ import { SectionHeading } from "./SectionHeading";
 // "About Me" section (not in the original design; built in the same style).
 // Photo on the left, text from the Studio on the right.
 
-export function About({ settings }: { settings: SiteSettings }) {
+export function About({ settings, lang }: { settings: SiteSettings; lang: Locale }) {
+  const t = getDictionary(lang).about;
   // Paragraphs are separated by an empty line in the Studio.
   const paragraphs = (settings.aboutText ?? "")
     .split(/\n\s*\n/)
@@ -22,7 +25,7 @@ export function About({ settings }: { settings: SiteSettings }) {
       className="scroll-mt-8 py-20 lg:py-[clamp(4rem,10svh,8rem)]"
     >
       <div className="mx-auto max-w-content px-gutter">
-        <SectionHeading id="about-heading" watermark="About" title={settings.aboutHeading ?? "About Me"} />
+        <SectionHeading id="about-heading" watermark={t.watermark} title={settings.aboutHeading ?? t.title} />
 
         {/* On desktop the photo height follows the screen height, so the whole
             section fits in one screen. */}
@@ -54,7 +57,7 @@ export function About({ settings }: { settings: SiteSettings }) {
             {settings.cvUrl && (
               <div className="reveal mt-8 lg:mt-12">
                 <a href={`${settings.cvUrl}?dl=`} download className={pillClasses("dark", "text-pill")}>
-                  Download CV <DownloadIcon />
+                  {t.downloadCv} <DownloadIcon />
                 </a>
               </div>
             )}

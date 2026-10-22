@@ -2,7 +2,9 @@ import { ImageResponse } from "next/og";
 import { loadOgFonts, OG_COLORS, OG_SIZE, truncate } from "@/lib/og";
 import { sanityFetch } from "@/sanity/lib/client";
 import { croppedImageUrl } from "@/sanity/lib/image";
-import { CATEGORY_LABELS, PROJECT_QUERY, SETTINGS_QUERY, type ProjectDetail, type SiteSettings } from "@/sanity/lib/queries";
+import { DEFAULT_LOCALE, isLocale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
+import { PROJECT_QUERY, SETTINGS_QUERY, type ProjectDetail, type SiteSettings } from "@/sanity/lib/queries";
 
 // Share image of a project page: category, title and short description on
 // the left, the cover image on the right. Made automatically from the
@@ -14,8 +16,9 @@ export const contentType = "image/png";
 
 const COVER = { width: 560, height: 420 };
 
-export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function Image({ params }: { params: Promise<{ lang: string; slug: string }> }) {
+  const { lang, slug } = await params;
+  const t = getDictionary(isLocale(lang) ? lang : DEFAULT_LOCALE);
   const [project, settings, fonts] = await Promise.all([
     sanityFetch<ProjectDetail | null>(PROJECT_QUERY, { slug }),
     sanityFetch<SiteSettings>(SETTINGS_QUERY),
@@ -62,7 +65,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                     : { background: OG_COLORS.accent, color: OG_COLORS.ink }),
                 }}
               >
-                {CATEGORY_LABELS[project.category]}
+                {t.category[project.category]}
               </div>
             )}
             <div style={{ marginTop: 28, fontSize: 52, fontWeight: 700, lineHeight: 1.1 }}>
@@ -78,7 +81,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 20 }}>
             <div style={{ fontWeight: 800, letterSpacing: 4 }}>{settings.fullName.toUpperCase()}</div>
             <div style={{ width: 28, height: 3, borderRadius: 3, background: OG_COLORS.accent }} />
-            <div style={{ fontWeight: 500, color: OG_COLORS.muted }}>Portfolio</div>
+            <div style={{ fontWeight: 500, color: OG_COLORS.muted }}>{t.meta.portfolio}</div>
           </div>
         </div>
 

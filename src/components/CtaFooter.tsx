@@ -1,3 +1,5 @@
+import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import type { SiteSettings } from "@/sanity/lib/queries";
 import { ArrowUpRightIcon, GitHubIcon, InstagramIcon, LinkedInIcon } from "./icons";
 import { LetsTalkTrigger } from "./contact/ContactProvider";
@@ -8,7 +10,8 @@ import { SplitText } from "./SplitText";
 // Phones: heading, social links, copyright (stacked). Desktop: a grid with the
 // copyright under the heading and the social links on the right.
 
-export function CtaFooter({ settings }: { settings: SiteSettings }) {
+export function CtaFooter({ settings, lang }: { settings: SiteSettings; lang: Locale }) {
+  const t = getDictionary(lang);
   const socials = [
     { label: "LinkedIn", href: settings.linkedinUrl, icon: <LinkedInIcon className="size-full" /> },
     { label: "Instagram", href: settings.instagramUrl, icon: <InstagramIcon className="size-full" /> },
@@ -20,14 +23,20 @@ export function CtaFooter({ settings }: { settings: SiteSettings }) {
       <div className="mx-auto flex max-w-content flex-col gap-10 px-gutter py-20 lg:grid lg:grid-cols-[1fr_auto] lg:items-center lg:gap-x-10 lg:gap-y-12 lg:py-32">
         <div className="lg:col-start-1 lg:row-start-1">
           <p data-from="down" className="reveal text-label font-semibold uppercase tracking-[0.15em] text-page/80">
-            {settings.ctaHeading ?? "Have a project in mind?"}
+            {settings.ctaHeading ?? t.footer.ctaHeading}
           </p>
           <h2 className="mt-2 lg:mt-4">
-            <LetsTalkTrigger className="group inline-flex cursor-pointer items-center gap-[0.25em] rounded-card text-[clamp(3.25rem,11vw,10rem)] leading-none font-bold uppercase focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-accent">
-              <SplitText text="Let’s Talk" />
-              <span data-from="scale" className="reveal">
-                <ArrowUpRightIcon className="block size-[0.6em] text-accent transition-transform duration-300 group-hover:translate-x-[0.08em] group-hover:-translate-y-[0.08em] motion-reduce:transition-none" />
-              </span>
+            {/* text-left: buttons center their text, which shows when a longer
+                translation ("Hubungi Saya") wraps onto two lines. */}
+            <LetsTalkTrigger className="group cursor-pointer rounded-card text-left text-[clamp(3.25rem,11vw,10rem)] leading-none font-bold uppercase focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-accent">
+              <SplitText
+                text={t.common.letsTalk}
+                suffix={
+                  <span data-from="scale" className="reveal ml-[0.25em] inline-block">
+                    <ArrowUpRightIcon className="block size-[0.6em] text-accent transition-transform duration-300 group-hover:translate-x-[0.08em] group-hover:-translate-y-[0.08em] motion-reduce:transition-none" />
+                  </span>
+                }
+              />
             </LetsTalkTrigger>
           </h2>
         </div>

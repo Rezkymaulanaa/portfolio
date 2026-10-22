@@ -19,6 +19,8 @@
 
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { headers } from "next/headers";
+import { DEFAULT_LOCALE, format, isLocale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 
 export type SendMessageState =
   | { status: "idle" }
@@ -57,6 +59,8 @@ export async function sendMessage(
   const email = String(formData.get("email") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
   const fields = { name, email, message };
+  const lang = String(formData.get("lang") ?? "");
+  const t = getDictionary(isLocale(lang) ? lang : DEFAULT_LOCALE).contact.errors;
 
   const pretendSent: SendMessageState = { status: "success", name, email };
 
@@ -69,21 +73,21 @@ export async function sendMessage(
   const tokenAge = getTokenAge(String(formData.get("token") ?? ""));
   if (tokenAge === null || tokenAge < MIN_FILL_TIME) return pretendSent;
   if (tokenAge > MAX_TOKEN_AGE) {
-    return { status: "error", message: "This form timed out. Please press send again.", fields };
+    return { status: "error", message: t.timedOut, fields };
   }
 
   if (!name || name.length > 100) {
-    return { status: "error", message: "Please enter your name.", fields };
+    return { status: "error", message: t.name, fields };
   }
   if (!EMAIL_PATTERN.test(email) || email.length > 200) {
-    return { status: "error", message: "Please enter a valid email address.", fields };
+    return { status: "error", message: t.email, fields };
   }
   if (message.length < 10 || message.length > 5000) {
-    return { status: "error", message: "Please write a message of at least 10 characters.", fields };
+    return { status: "error", message: t.message, fields };
   }
 
   if ((message.match(LINK_PATTERN)?.length ?? 0) > MAX_LINKS) {
-    return { status: "error", message: `Please include at most ${MAX_LINKS} links.`, fields };
+    return { status: "error", message: format(t.links, { max: MAX_LINKS }), fields };
   }
 
   const now = Date.now();
@@ -98,11 +102,7 @@ export async function sendMessage(
     (time) => now - time < RATE_LIMITS[RATE_LIMITS.length - 1].window,
   );
   if (RATE_LIMITS.some((limit) => sentTimes.filter((time) => now - time < limit.window).length >= limit.max)) {
-    return {
-      status: "error",
-      message: "You have sent several messages already. Please try again later.",
-      fields,
-    };
+    return { status: "error", message: t.tooMany, fields };
   }
 
   for (const [key, time] of recentMessages) {
@@ -120,7 +120,7 @@ ${message}`).digest("hex");
   const to = process.env.CONTACT_TO_EMAIL;
   if (!apiKey || !to) {
     console.error("Missing RESEND_API_KEY or CONTACT_TO_EMAIL");
-    return { status: "error", message: "Sending is not set up yet.", fields };
+    return { status: "error", message: t.notSetUp, fields };
   }
 
   try {
@@ -144,11 +144,11 @@ ${message}`).digest("hex");
 
     if (!response.ok) {
       console.error("Resend error", response.status, await response.text());
-      return { status: "error", message: "Your message could not be sent.", fields };
+      return { status: "error", message: t.failed, fields };
     }
   } catch (error) {
     console.error("Resend request failed", error);
-    return { status: "error", message: "Your message could not be sent.", fields };
+    return { status: "error", message: t.failed, fields };
   }
 
   recentMessages.set(fingerprint, now);

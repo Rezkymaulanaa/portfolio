@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { Metadata } from "next";
+import { LOCALES, OG_LOCALES, type Locale } from "@/i18n/config";
 
 // Shared pieces for the social share images (opengraph-image.tsx files) and
 // the Open Graph metadata. Share images are 1200×630, the size LinkedIn,
@@ -38,8 +39,13 @@ export async function loadOgFonts() {
 
 // Open Graph fields every page shares. A page that sets its own openGraph
 // replaces the whole object, so pages spread this in.
-export function openGraphBase(siteName: string): NonNullable<Metadata["openGraph"]> {
-  return { type: "website", siteName, locale: "en_US" };
+export function openGraphBase(siteName: string, locale: Locale): NonNullable<Metadata["openGraph"]> {
+  return {
+    type: "website",
+    siteName,
+    locale: OG_LOCALES[locale],
+    alternateLocale: LOCALES.filter((other) => other !== locale).map((other) => OG_LOCALES[other]),
+  };
 }
 
 // Shortens text to whole words, with "…" at the end.

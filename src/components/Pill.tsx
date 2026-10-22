@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
+import { LocalizedLink } from "./LocalizedLink";
 import { SectionLink } from "./SectionLink";
 
 // Shared pill-shaped buttons and links.
@@ -61,8 +61,8 @@ export function PillLink({ href, variant, children, className, external, onClick
   }
 
   return (
-    <Link href={href} className={classes} onClick={onClick}>
+    <LocalizedLink href={href} className={classes} onClick={onClick}>
       {children}
-    </Link>
+    </LocalizedLink>
   );
 }

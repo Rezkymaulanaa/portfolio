@@ -257,6 +257,37 @@ body {
 }
 
 /*
+ * Language switch (EN | ID): the page is rebuilt in the other language, so
+ * everything would play its entrance animation again and look like a reload.
+ * While <html data-reveal-instant> is set (RevealObserver.tsx sets it for
+ * two frames after a switch), content simply stays visible.
+ */
+[data-reveal][data-reveal-instant] .reveal,
+[data-reveal][data-reveal-instant] .reveal * {
+  transition: none !important;
+}
+
+[data-reveal][data-reveal-instant] .reveal {
+  opacity: 1;
+  translate: none;
+  scale: none;
+  filter: none;
+}
+
+[data-reveal][data-reveal-instant] .reveal[data-from="clip"] > * {
+  clip-path: inset(0 0 0 0);
+}
+
+[data-reveal][data-reveal-instant] .reveal-zoom img,
+[data-reveal][data-reveal-instant] .reveal-zoom video {
+  transform: none;
+}
+
+[data-reveal][data-reveal-instant] .reveal-words .word > span {
+  translate: none;
+}
+
+/*
  * Photo grid hover (Education): the photo under the mouse zooms in a little,
  * the other photos dim. Uses "scale" and "filter", so it does not clash with
  * the reveal zoom (transform). Mouse devices only.

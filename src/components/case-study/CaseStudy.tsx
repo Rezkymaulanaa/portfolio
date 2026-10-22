@@ -1,3 +1,5 @@
+import type { Locale } from "@/i18n/config";
+import { getDictionary, type Dictionary } from "@/i18n/dictionaries";
 import type { CaseBlock } from "@/sanity/lib/queries";
 import { CaseNav, type CaseNavItem } from "./CaseNav";
 import { DetailImage } from "../DetailImage";
@@ -6,7 +8,8 @@ import { SplitText } from "../SplitText";
 // Case study on the project detail page: a list of content blocks from the
 // Studio. Long case studies (3+ sections with a heading) get a side menu.
 
-export function CaseStudy({ blocks }: { blocks: CaseBlock[] }) {
+export function CaseStudy({ blocks, lang }: { blocks: CaseBlock[]; lang: Locale }) {
+  const t = getDictionary(lang);
   const navItems: CaseNavItem[] = blocks
     .filter((block) => block.heading)
     .map((block) => ({ id: sectionId(block), label: block.heading! }));
@@ -38,7 +41,7 @@ export function CaseStudy({ blocks }: { blocks: CaseBlock[] }) {
             )}
             {block.intro && <Paragraphs text={block.intro} className="mt-4 text-muted" />}
             <div className={block.heading || block.intro ? "mt-8 lg:mt-10" : ""}>
-              <BlockBody block={block} />
+              <BlockBody block={block} t={t} />
             </div>
           </section>
         ))}
@@ -51,7 +54,7 @@ function sectionId(block: CaseBlock) {
   return `section-${block._key}`;
 }
 
-function BlockBody({ block }: { block: CaseBlock }) {
+function BlockBody({ block, t }: { block: CaseBlock; t: Dictionary }) {
   switch (block._type) {
     case "caseText":
       return (
@@ -79,11 +82,11 @@ function BlockBody({ block }: { block: CaseBlock }) {
           {block.items?.map((item) => (
             <li key={item._key} className="grid gap-3 lg:grid-cols-2">
               <div data-from="left" className="reveal rounded-frame border border-line bg-surface p-6 lg:p-8">
-                <p className="text-label font-semibold uppercase tracking-[0.2em] text-muted">Problem</p>
+                <p className="text-label font-semibold uppercase tracking-[0.2em] text-muted">{t.project.problem}</p>
                 <Paragraphs text={item.problem} className="mt-3" />
               </div>
               <div data-from="right" className="reveal rounded-frame bg-ink p-6 text-page lg:p-8">
-                <p className="text-label font-semibold uppercase tracking-[0.2em] text-accent">Solution</p>
+                <p className="text-label font-semibold uppercase tracking-[0.2em] text-accent">{t.project.solution}</p>
                 <Paragraphs text={item.solution} className="mt-3 text-page/90" />
               </div>
             </li>

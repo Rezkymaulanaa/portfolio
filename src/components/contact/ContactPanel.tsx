@@ -1,6 +1,8 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { format } from "@/i18n/config";
+import { useDictionary, useLocale } from "@/i18n/I18nProvider";
 import { getFormToken, sendMessage, type SendMessageState } from "@/lib/send-message";
 import { ArrowUpRightIcon, UserCircleIcon } from "../icons";
 import { pillClasses } from "../Pill";
@@ -19,6 +21,8 @@ type ContactPanelProps = {
 
 export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
   const { isOpen, close } = useContact();
+  const locale = useLocale();
+  const t = useDictionary().contact;
   const [state, formAction, isPending] = useActionState(sendMessage, initialState);
   // "Send another message" hides the last success message and shows an
   // empty form again (a new key gives a fresh form).
@@ -81,12 +85,12 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
           <p id="contact-panel-title" className="text-small leading-tight font-semibold">
             {ownerName}
           </p>
-          <p className="text-label text-muted">Usually replies within 1–2 days</p>
+          <p className="text-label text-muted">{t.status}</p>
         </div>
         <button
           type="button"
           onClick={close}
-          aria-label="Close message panel"
+          aria-label={t.close}
           className="flex size-9 cursor-pointer items-center justify-center rounded-full text-muted transition hover:bg-page hover:text-ink focus-visible:outline-2 focus-visible:outline-ink"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" className="size-4" aria-hidden="true">
@@ -97,17 +101,13 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
 
       {/* Conversation */}
       <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
-        <ChatBubble>
-          Hi! Tell me a bit about your project or idea. Your message goes straight to my email,
-          and I&apos;ll reply to you there.
-        </ChatBubble>
+        <ChatBubble>{t.intro}</ChatBubble>
 
         {isSuccess && state.status === "success" ? (
           <>
-            <ChatBubble fromVisitor>Message sent ✓</ChatBubble>
+            <ChatBubble fromVisitor>{t.sent}</ChatBubble>
             <ChatBubble>
-              Thanks, {state.name}! I got your message and will reply to{" "}
-              <strong className="font-semibold">{state.email}</strong> soon.
+              <Thanks text={t.thanks} name={state.name} email={state.email} />
             </ChatBubble>
             <button
               type="button"
@@ -117,49 +117,51 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
               }}
               className={pillClasses("outline", "cursor-pointer text-label")}
             >
-              Send another message
+              {t.sendAnother}
             </button>
           </>
         ) : (
           <form key={formKey} action={formAction} className="space-y-3" noValidate>
-            <Field label="Name">
+            <Field label={t.name}>
               <input
                 ref={firstFieldRef}
                 name="name"
                 required
                 maxLength={100}
                 autoComplete="name"
-                placeholder="Your name"
+                placeholder={t.namePlaceholder}
                 defaultValue={fields?.name}
                 className={inputClasses}
               />
             </Field>
-            <Field label="Email">
+            <Field label={t.email}>
               <input
                 name="email"
                 type="email"
                 required
                 maxLength={200}
                 autoComplete="email"
-                placeholder="you@email.com"
+                placeholder={t.emailPlaceholder}
                 defaultValue={fields?.email}
                 className={inputClasses}
               />
             </Field>
-            <Field label="Message">
+            <Field label={t.message}>
               <textarea
                 name="message"
                 required
                 rows={4}
                 minLength={10}
                 maxLength={5000}
-                placeholder="What are you working on?"
+                placeholder={t.messagePlaceholder}
                 defaultValue={fields?.message}
                 className={`${inputClasses} resize-none`}
               />
             </Field>
 
             <input type="hidden" name="token" value={token} />
+            {/* Language of the error messages that come back. */}
+            <input type="hidden" name="lang" value={locale} />
 
             {/* Spam trap: hidden from people, bots tend to fill it in. */}
             <div aria-hidden="true" className="hidden">
@@ -171,8 +173,7 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
 
             {state.status === "error" && (
               <p role="alert" className="rounded-card bg-page px-3 py-2 text-label text-ink">
-                {state.message} You can also email me directly at{" "}
-                <CopyEmailButton email={contactEmail} />.
+                {state.message} {t.emailDirectly} <CopyEmailButton email={contactEmail} />.
               </p>
             )}
 
@@ -186,7 +187,7 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
                 "w-full cursor-pointer py-[0.75em] text-small font-medium disabled:cursor-wait disabled:opacity-70",
               )}
             >
-              {isPending ? "Sending…" : "Send message"} {!isPending && <ArrowUpRightIcon />}
+              {isPending ? t.sending : t.send} {!isPending && <ArrowUpRightIcon />}
             </button>
           </form>
         )}
@@ -194,7 +195,7 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
 
       {/* Fallback */}
       <p className="border-t border-line/60 px-5 py-3 text-center text-label text-muted">
-        Prefer email? <CopyEmailButton email={contactEmail} />
+        {t.preferEmail} <CopyEmailButton email={contactEmail} />
       </p>
     </div>
   );
@@ -226,9 +227,22 @@ function ChatBubble({ children, fromVisitor = false }: { children: React.ReactNo
   );
 }
 
+// The thank-you text with the visitor's email in bold.
+function Thanks({ text, name, email }: { text: string; name: string; email: string }) {
+  const [before, after = ""] = format(text, { name }).split("{email}");
+  return (
+    <>
+      {before}
+      <strong className="font-semibold">{email}</strong>
+      {after}
+    </>
+  );
+}
+
 // Copies the email address to the clipboard and shows "Copied!" for a moment.
 function CopyEmailButton({ email }: { email: string }) {
   const [copied, setCopied] = useState(false);
+  const t = useDictionary().contact;
 
   async function copy() {
     try {
@@ -247,7 +261,7 @@ function CopyEmailButton({ email }: { email: string }) {
       title={email}
       className="cursor-pointer font-medium text-ink underline decoration-line underline-offset-4 transition hover:decoration-ink"
     >
-      {copied ? "Copied!" : `Copy ${email}`}
+      {copied ? t.copied : format(t.copyEmail, { email })}
     </button>
   );
 }

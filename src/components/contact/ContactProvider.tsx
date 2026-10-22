@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from "react";
+import { useDictionary } from "@/i18n/I18nProvider";
 import { ArrowUpRightIcon } from "../icons";
 import { pillClasses } from "../Pill";
 import { ContactPanel } from "./ContactPanel";
@@ -77,6 +78,7 @@ export function LetsTalkTrigger({ className, children }: { className?: string; c
 // Pill button that opens the message panel.
 export function LetsTalkButton({ variant, className, onClick }: LetsTalkButtonProps) {
   const { isOpen, open } = useContact();
+  const t = useDictionary();
 
   return (
     <button
@@ -89,7 +91,7 @@ export function LetsTalkButton({ variant, className, onClick }: LetsTalkButtonPr
       }}
       className={pillClasses(variant, `cursor-pointer ${className ?? ""}`)}
     >
-      Let&apos;s Talk <ArrowUpRightIcon />
+      {t.common.letsTalk} <ArrowUpRightIcon />
     </button>
   );
 }

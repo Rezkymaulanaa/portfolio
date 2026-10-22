@@ -5,6 +5,10 @@ import { CaseStudy } from "@/components/case-study/CaseStudy";
 import { DetailImage } from "@/components/DetailImage";
 import { notFound } from "next/navigation";
 import { DashedDivider } from "@/components/DashedDivider";
+import { LanguageSwitch } from "@/components/LanguageSwitch";
+import { isLocale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
+import { alternatesFor } from "@/lib/alternates";
 import { ArrowLeftIcon, ArrowUpRightIcon } from "@/components/icons";
 import { PillLink, pillClasses } from "@/components/Pill";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -29,27 +33,30 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata(props: PageProps<"/work/[slug]">): Promise<Metadata> {
-  const { slug } = await props.params;
+export async function generateMetadata(props: PageProps<"/[lang]/work/[slug]">): Promise<Metadata> {
+  const { lang, slug } = await props.params;
+  if (!isLocale(lang)) return {};
   const project = await sanityFetch<ProjectDetail | null>(PROJECT_QUERY, { slug });
   if (!project) return {};
-  const url = `/work/${slug}`;
+  const alternates = alternatesFor(lang, `/work/${slug}`);
   return {
     title: project.title,
     description: project.shortDescription,
-    alternates: { canonical: url },
+    alternates,
     openGraph: {
-      ...openGraphBase(SITE_NAME),
+      ...openGraphBase(SITE_NAME, lang),
       type: "article",
       title: `${project.title} — ${SITE_NAME}`,
       description: project.shortDescription,
-      url,
+      url: alternates.canonical,
     },
   };
 }
 
-export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
-  const { slug } = await props.params;
+export default async function ProjectPage(props: PageProps<"/[lang]/work/[slug]">) {
+  const { lang, slug } = await props.params;
+  if (!isLocale(lang)) notFound();
+  const t = getDictionary(lang);
   const [project, moreProjects] = await Promise.all([
     sanityFetch<ProjectDetail | null>(PROJECT_QUERY, { slug }),
     sanityFetch<ProjectCardData[]>(MORE_PROJECTS_QUERY, { slug }),
@@ -63,10 +70,11 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
         <DetailStroke />
 
         <div className="relative mx-auto max-w-work px-gutter pt-10 lg:pt-16">
-          <div className="reveal">
+          <div className="reveal flex items-center justify-between gap-4">
             <BackLink fallbackHref="/work" className={pillClasses("outline", "text-pill")}>
-              <ArrowLeftIcon /> Back
+              <ArrowLeftIcon /> {t.common.back}
             </BackLink>
+            <LanguageSwitch />
           </div>
 
           <header className="mt-10 flex flex-col gap-10 lg:mt-[4.5rem] lg:flex-row lg:justify-between">
@@ -89,17 +97,17 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
               {project.livePreviewUrl && (
                 <div className="reveal mt-8 lg:mt-10">
                   <PillLink href={project.livePreviewUrl} variant="dark" external className="text-pill">
-                    Live Preview <ArrowUpRightIcon />
+                    {t.project.livePreview} <ArrowUpRightIcon />
                   </PillLink>
                 </div>
               )}
             </div>
 
             <dl className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:flex lg:flex-col lg:items-end lg:gap-8 lg:text-right">
-              {project.service && <MetaItem label="Service">{project.service}</MetaItem>}
-              {project.timeline && <MetaItem label="Timeline">{project.timeline}</MetaItem>}
+              {project.service && <MetaItem label={t.project.service}>{project.service}</MetaItem>}
+              {project.timeline && <MetaItem label={t.project.timeline}>{project.timeline}</MetaItem>}
               {project.tools && project.tools.length > 0 && (
-                <MetaItem label="Tools" className="col-span-full">
+                <MetaItem label={t.project.tools} className="col-span-full">
                   <ul className="mt-1 flex flex-wrap gap-3 sm:gap-4 lg:justify-end">
                     {project.tools.map((tool) => (
                       <li
@@ -143,7 +151,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
             />
           </div>
 
-          {project.content && project.content.length > 0 && <CaseStudy blocks={project.content} />}
+          {project.content && project.content.length > 0 && <CaseStudy blocks={project.content} lang={lang} />}
 
           {project.gallery && project.gallery.length > 0 && (
             <div className={`space-y-6 ${project.content?.length ? "mt-20 lg:mt-28" : "mt-6"}`}>
@@ -170,7 +178,7 @@ export default async function ProjectPage(props: PageProps<"/work/[slug]">) {
             aria-labelledby="more-work-heading"
             className="mx-auto max-w-work px-gutter pt-16 pb-4 lg:pt-24"
           >
-            <SectionHeading id="more-work-heading" title="More Work" align="center" />
+            <SectionHeading id="more-work-heading" title={t.work.moreWork} align="center" />
             <ul className="mt-10 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:mt-16">
               {moreProjects.map((item) => (
                 <li key={item._id} className="reveal">

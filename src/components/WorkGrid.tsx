@@ -1,19 +1,16 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { useDictionary } from "@/i18n/I18nProvider";
 import type { ProjectCardData } from "@/sanity/lib/queries";
 import { ProjectCard } from "./ProjectCard";
 
 // Filter tabs (All / Real Project / Exploration) and the project card grid.
 // Filtering happens instantly in the browser.
 
-const FILTERS = [
-  { label: "All", value: "all" },
-  { label: "Real Project", value: "real-project" },
-  { label: "Exploration", value: "exploration" },
-] as const;
+const FILTERS = ["all", "real-project", "exploration"] as const;
 
-type FilterValue = (typeof FILTERS)[number]["value"];
+type FilterValue = (typeof FILTERS)[number];
 
 type WorkGridProps = {
   projects: ProjectCardData[];
@@ -23,6 +20,7 @@ type WorkGridProps = {
 
 export function WorkGrid({ projects, action }: WorkGridProps) {
   const [filter, setFilter] = useState<FilterValue>("all");
+  const t = useDictionary();
 
   const visible =
     filter === "all" ? projects : projects.filter((project) => project.category === filter);
@@ -30,18 +28,18 @@ export function WorkGrid({ projects, action }: WorkGridProps) {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <ul data-from="left" className="reveal flex flex-wrap gap-x-6 gap-y-2 text-pill lg:gap-x-10" aria-label="Filter projects">
+        <ul data-from="left" className="reveal flex flex-wrap gap-x-6 gap-y-2 text-pill lg:gap-x-10" aria-label={t.work.filterLabel}>
           {FILTERS.map((item) => (
-            <li key={item.value}>
+            <li key={item}>
               <button
                 type="button"
-                onClick={() => setFilter(item.value)}
-                aria-pressed={filter === item.value}
+                onClick={() => setFilter(item)}
+                aria-pressed={filter === item}
                 className={`rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink motion-reduce:transition-none ${
-                  filter === item.value ? "text-ink" : "text-muted hover:text-ink"
+                  filter === item ? "text-ink" : "text-muted hover:text-ink"
                 }`}
               >
-                {item.label}
+                {item === "all" ? t.work.all : t.category[item]}
               </button>
             </li>
           ))}
@@ -63,7 +61,7 @@ export function WorkGrid({ projects, action }: WorkGridProps) {
         </ul>
       ) : (
         <p className="mt-14 text-center text-muted" role="status">
-          No projects in this category yet.
+          {t.work.empty}
         </p>
       )}
     </div>

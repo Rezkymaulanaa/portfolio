@@ -1,13 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useDictionary } from "@/i18n/I18nProvider";
+import { scrollToSection } from "@/lib/scroll";
 
 // Sticky side menu of the case study. Highlights the section in view.
+// Clicking scrolls to the section without adding a step to the browser
+// history, so Back still returns to the previous page.
 
 export type CaseNavItem = { id: string; label: string };
 
 export function CaseNav({ items }: { items: CaseNavItem[] }) {
   const [activeId, setActiveId] = useState(items[0]?.id);
+  const t = useDictionary().project;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -27,8 +32,8 @@ export function CaseNav({ items }: { items: CaseNavItem[] }) {
   }, [items]);
 
   return (
-    <nav aria-label="Case study sections" className="sticky top-10">
-      <p className="text-label font-semibold uppercase tracking-[0.2em] text-muted">Contents</p>
+    <nav aria-label={t.sectionsLabel} className="sticky top-10">
+      <p className="text-label font-semibold uppercase tracking-[0.2em] text-muted">{t.contents}</p>
       <ol className="mt-5 border-l border-line">
         {items.map((item, index) => {
           const isActive = item.id === activeId;
@@ -36,6 +41,9 @@ export function CaseNav({ items }: { items: CaseNavItem[] }) {
             <li key={item.id}>
               <a
                 href={`#${item.id}`}
+                onClick={(event) => {
+                  if (scrollToSection(item.id)) event.preventDefault();
+                }}
                 aria-current={isActive ? "true" : undefined}
                 className={`-ml-px flex gap-3 border-l-2 py-2 pl-4 text-small transition-colors duration-200 motion-reduce:transition-none ${
                   isActive

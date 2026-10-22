@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import type { SiteSettings } from "@/sanity/lib/queries";
 import { ArrowUpRightIcon } from "./icons";
 import { PillLink } from "./Pill";
@@ -8,7 +10,8 @@ import { SplitText } from "./SplitText";
 // Home page hero: full-width photo (or looping video), very large name,
 // headline, tagline and "Browse Projects" button.
 
-export function Hero({ settings }: { settings: SiteSettings }) {
+export function Hero({ settings, lang }: { settings: SiteSettings; lang: Locale }) {
+  const t = getDictionary(lang);
   const hasVideo = Boolean(settings.heroVideoWebm || settings.heroVideoMp4);
   // Shape of the hero photo (the video should have the same shape).
   const { width = 1440, height = 1024 } = settings.heroImage.dimensions ?? {};
@@ -99,7 +102,7 @@ export function Hero({ settings }: { settings: SiteSettings }) {
             )}
             <div data-from="scale" className="reveal mt-5 lg:mt-[clamp(1rem,3svh,1.5rem)]">
               <PillLink href="#work" variant="accent" className="text-pill">
-                Browse Projects <ArrowUpRightIcon />
+                {t.hero.browseProjects} <ArrowUpRightIcon />
               </PillLink>
             </div>
           </div>

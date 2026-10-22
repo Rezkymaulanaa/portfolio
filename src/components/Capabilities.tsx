@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import type { SkillGroup, Tool } from "@/sanity/lib/queries";
 import { SectionHeading } from "./SectionHeading";
 
@@ -9,9 +11,11 @@ import { SectionHeading } from "./SectionHeading";
 type CapabilitiesProps = {
   skillGroups: SkillGroup[];
   tools: Tool[];
+  lang: Locale;
 };
 
-export function Capabilities({ skillGroups, tools }: CapabilitiesProps) {
+export function Capabilities({ skillGroups, tools, lang }: CapabilitiesProps) {
+  const t = getDictionary(lang).capabilities;
   return (
     <section
       id="capabilities"
@@ -21,8 +25,8 @@ export function Capabilities({ skillGroups, tools }: CapabilitiesProps) {
       <div className="mx-auto max-w-content px-gutter">
         <SectionHeading
           id="capabilities-heading"
-          watermark="Capabilities"
-          title="Main Skills & Tools"
+          watermark={t.watermark}
+          title={t.title}
           tone="dark"
         />
 
@@ -41,7 +45,7 @@ export function Capabilities({ skillGroups, tools }: CapabilitiesProps) {
           {tools.length > 0 && (
             <div className="border-b border-line/80 py-6 lg:px-5 lg:py-8">
               <h3 className="reveal text-h3 font-semibold">
-                Tools that i usually use
+                {t.tools}
               </h3>
               {/* Hover (or keyboard focus): the tile lifts, its border turns
                   pink, the icon tilts with a small bounce, a name label

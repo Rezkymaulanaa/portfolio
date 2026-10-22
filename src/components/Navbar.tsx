@@ -2,7 +2,10 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { splitLocale } from "@/i18n/config";
+import { useDictionary } from "@/i18n/I18nProvider";
 import { LetsTalkButton } from "./contact/ContactProvider";
+import { LanguageSwitch } from "./LanguageSwitch";
 import { SectionLink } from "./SectionLink";
 
 // Floating pill navbar with two variants:
@@ -13,13 +16,14 @@ import { SectionLink } from "./SectionLink";
 // It expands again on mouse hover or keyboard focus.
 // Phones/tablets: always collapsed; tapping the dots opens a stacked menu.
 // Hidden on the work pages (/work and /work/<slug>), which have a Back button.
+// The EN | ID switch sits next to "Let's Talk".
 
 const NAV_LINKS = [
-  { label: "Work", href: "/#work" },
-  { label: "Service", href: "/#service" },
-  { label: "Capabilities", href: "/#capabilities" },
-  { label: "About Me", href: "/#about" },
-];
+  { key: "work", href: "/#work" },
+  { key: "service", href: "/#service" },
+  { key: "capabilities", href: "/#capabilities" },
+  { key: "about", href: "/#about" },
+] as const;
 
 // Scroll positions (px) where the bar collapses / expands again.
 // Two different values stop it from flickering around one point.
@@ -44,7 +48,8 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
   const [focused, setFocused] = useState(false);
   const [tapped, setTapped] = useState(false);
 
-  const pathname = usePathname();
+  const { path } = splitLocale(usePathname());
+  const t = useDictionary();
   const expanded = (isDesktop && atTop) || hovered || focused || tapped;
 
   // Desktop or not (the full bar only fits on large screens).
@@ -122,13 +127,13 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
   const showBarStyle = expanded && atTop && isDesktop;
 
   // The work pages (/work and /work/<slug>) use a Back button instead.
-  if (pathname === "/work" || pathname.startsWith("/work/")) return null;
+  if (path === "/work" || path.startsWith("/work/")) return null;
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-4 lg:top-5">
       <nav
         ref={navRef}
-        aria-label="Main"
+        aria-label={t.nav.label}
         onPointerEnter={handlePointerEnter}
         onPointerLeave={handlePointerLeave}
         onFocus={handleFocus}
@@ -136,8 +141,11 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
         className={[
           "pointer-events-auto relative overflow-hidden rounded-[2.5rem] border",
           "transition-[width,height,background-color,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+          // The open width is one value ("full width, at most 24rem / 82.5rem"),
+          // not w-full + max-w: a max-width cannot animate, so on closing the
+          // bar first jumped to the full screen width before shrinking.
           expanded
-            ? "h-auto w-full max-w-sm lg:h-[4.25rem] lg:max-w-[82.5rem]"
+            ? "h-auto w-[min(24rem,100%)] lg:h-[4.25rem] lg:w-[min(82.5rem,100%)]"
             : "h-11 w-[4.5rem] lg:h-[3.75rem] lg:w-24",
           showBarStyle
             ? "border-white/70 bg-white/25 backdrop-blur-md"
@@ -148,7 +156,7 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
         <button
           type="button"
           onClick={toggleMenu}
-          aria-label="Open navigation"
+          aria-label={t.nav.open}
           aria-expanded={expanded}
           aria-controls="main-menu"
           className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-ink motion-reduce:transition-none ${
@@ -191,17 +199,16 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
                   onClick={closeMenu}
                   className="block rounded-full px-1 py-2 text-nav transition-opacity lg:text-small hover:opacity-60 focus-visible:outline-2 focus-visible:outline-ink"
                 >
-                  {link.label}
+                  {t.nav[link.key]}
                 </SectionLink>
               </li>
             ))}
           </ul>
 
-          <LetsTalkButton
-            variant="dark"
-            onClick={closeMenu}
-            className="self-start text-nav lg:self-auto lg:text-small"
-          />
+          <div className="flex items-center justify-between gap-3 lg:justify-end">
+            <LanguageSwitch />
+            <LetsTalkButton variant="dark" onClick={closeMenu} className="text-nav lg:text-small" />
+          </div>
         </div>
       </nav>
     </header>
