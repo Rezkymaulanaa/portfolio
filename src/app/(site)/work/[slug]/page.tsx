@@ -10,6 +10,8 @@ import { PillLink, pillClasses } from "@/components/Pill";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Tag } from "@/components/Tag";
+import { openGraphBase } from "@/lib/og";
+import { SITE_NAME } from "@/lib/site";
 import { client, sanityFetch } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import {
@@ -31,9 +33,18 @@ export async function generateMetadata(props: PageProps<"/work/[slug]">): Promis
   const { slug } = await props.params;
   const project = await sanityFetch<ProjectDetail | null>(PROJECT_QUERY, { slug });
   if (!project) return {};
+  const url = `/work/${slug}`;
   return {
     title: project.title,
     description: project.shortDescription,
+    alternates: { canonical: url },
+    openGraph: {
+      ...openGraphBase(SITE_NAME),
+      type: "article",
+      title: `${project.title} — ${SITE_NAME}`,
+      description: project.shortDescription,
+      url,
+    },
   };
 }
 

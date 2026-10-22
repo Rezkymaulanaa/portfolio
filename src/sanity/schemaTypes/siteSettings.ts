@@ -209,7 +209,7 @@ export const siteSettings = defineType({
     defineField({
       name: "siteDescription",
       title: "Site description",
-      description: "Shown in search results (about 150 characters).",
+      description: "Shown in Google results and link previews. Aim for 120–160 characters.",
       type: "text",
       rows: 3,
       group: "seo",
@@ -218,7 +218,8 @@ export const siteSettings = defineType({
     defineField({
       name: "ogImage",
       title: "Social share image",
-      description: "Image shown when the site is shared on social media (1200×630).",
+      description:
+        "Optional. Leave empty to use the automatic share image (your hero photo with your name). Upload your own 1200×630 image to replace it.",
       type: "image",
       group: "seo",
     }),

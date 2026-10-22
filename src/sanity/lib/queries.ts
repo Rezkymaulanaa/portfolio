@@ -140,6 +140,7 @@ export type ProjectDetail = {
   _id: string;
   title: string;
   slug: string;
+  category?: ProjectCardData["category"];
   tags?: string[];
   shortDescription?: string;
   timeline?: string;
@@ -178,7 +179,7 @@ export type CaseBlock =
 const SIZED_IMAGE = `..., "dimensions": asset->metadata.dimensions{ width, height }`;
 
 export const PROJECT_QUERY = defineQuery(`*[_type == "project" && slug.current == $slug][0]{
-  _id, title, "slug": slug.current, tags, shortDescription, timeline, livePreviewUrl,
+  _id, title, "slug": slug.current, category, tags, shortDescription, timeline, livePreviewUrl,
   "service": service->title,
   tools[]->{ _id, name, icon },
   coverImage{ ${SIZED_IMAGE} },
