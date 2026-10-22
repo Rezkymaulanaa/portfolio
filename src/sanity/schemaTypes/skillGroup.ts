@@ -1,25 +1,30 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { withIndonesian } from "./i18n";
 
 export const skillGroup = defineType({
   name: "skillGroup",
   title: "Skill group",
   type: "document",
   fields: [
-    defineField({
-      name: "title",
-      title: "Title",
-      description: "e.g. “Business Process Management”.",
-      type: "string",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "items",
-      title: "Items",
-      description: "Each item is one bullet point.",
-      type: "array",
-      of: [defineArrayMember({ type: "string" })],
-      validation: (rule) => rule.required().min(1),
-    }),
+    ...withIndonesian(
+      defineField({
+        name: "title",
+        title: "Title",
+        description: "e.g. “Business Process Management”.",
+        type: "string",
+        validation: (rule) => rule.required(),
+      }),
+    ),
+    ...withIndonesian(
+      defineField({
+        name: "items",
+        title: "Items",
+        description: "Each item is one bullet point.",
+        type: "array",
+        of: [defineArrayMember({ type: "string" })],
+        validation: (rule) => rule.required().min(1),
+      }),
+    ),
     defineField({
       name: "order",
       title: "Order",

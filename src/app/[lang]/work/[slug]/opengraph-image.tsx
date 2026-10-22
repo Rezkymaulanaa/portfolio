@@ -18,10 +18,11 @@ const COVER = { width: 560, height: 420 };
 
 export default async function Image({ params }: { params: Promise<{ lang: string; slug: string }> }) {
   const { lang, slug } = await params;
-  const t = getDictionary(isLocale(lang) ? lang : DEFAULT_LOCALE);
+  const locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const t = getDictionary(locale);
   const [project, settings, fonts] = await Promise.all([
-    sanityFetch<ProjectDetail | null>(PROJECT_QUERY, { slug }),
-    sanityFetch<SiteSettings>(SETTINGS_QUERY),
+    sanityFetch<ProjectDetail | null>(PROJECT_QUERY, { slug }, locale),
+    sanityFetch<SiteSettings>(SETTINGS_QUERY, {}, locale),
     loadOgFonts(),
   ]);
 

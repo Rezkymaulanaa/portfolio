@@ -36,7 +36,7 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: PageProps<"/[lang]/work/[slug]">): Promise<Metadata> {
   const { lang, slug } = await props.params;
   if (!isLocale(lang)) return {};
-  const project = await sanityFetch<ProjectDetail | null>(PROJECT_QUERY, { slug });
+  const project = await sanityFetch<ProjectDetail | null>(PROJECT_QUERY, { slug }, lang);
   if (!project) return {};
   const alternates = alternatesFor(lang, `/work/${slug}`);
   return {
@@ -58,8 +58,8 @@ export default async function ProjectPage(props: PageProps<"/[lang]/work/[slug]"
   if (!isLocale(lang)) notFound();
   const t = getDictionary(lang);
   const [project, moreProjects] = await Promise.all([
-    sanityFetch<ProjectDetail | null>(PROJECT_QUERY, { slug }),
-    sanityFetch<ProjectCardData[]>(MORE_PROJECTS_QUERY, { slug }),
+    sanityFetch<ProjectDetail | null>(PROJECT_QUERY, { slug }, lang),
+    sanityFetch<ProjectCardData[]>(MORE_PROJECTS_QUERY, { slug }, lang),
   ]);
 
   if (!project) notFound();

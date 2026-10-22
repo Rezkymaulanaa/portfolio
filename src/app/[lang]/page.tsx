@@ -28,10 +28,10 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
   if (!isLocale(lang)) notFound();
   const t = getDictionary(lang);
   const [settings, projects, services, skillGroups] = await Promise.all([
-    sanityFetch<SiteSettings>(SETTINGS_QUERY),
-    sanityFetch<ProjectCardData[]>(FEATURED_PROJECTS_QUERY),
-    sanityFetch<Service[]>(SERVICES_QUERY),
-    sanityFetch<SkillGroup[]>(SKILL_GROUPS_QUERY),
+    sanityFetch<SiteSettings>(SETTINGS_QUERY, {}, lang),
+    sanityFetch<ProjectCardData[]>(FEATURED_PROJECTS_QUERY, {}, lang),
+    sanityFetch<Service[]>(SERVICES_QUERY, {}, lang),
+    sanityFetch<SkillGroup[]>(SKILL_GROUPS_QUERY, {}, lang),
   ]);
 
   return (

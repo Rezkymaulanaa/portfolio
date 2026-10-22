@@ -44,7 +44,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  const settings = await sanityFetch<SiteSettings>(SETTINGS_QUERY);
+  const settings = await sanityFetch<SiteSettings>(SETTINGS_QUERY, {}, lang);
   const title = settings.siteTitle ?? `${settings.fullName} — ${getDictionary(lang).meta.portfolio}`;
   const description = settings.siteDescription ?? settings.tagline;
   const alternates = alternatesFor(lang, "/");
@@ -64,7 +64,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   // around the 404 page, and a 404 thrown here would replace the whole page.
   const { lang: requested } = await params;
   const lang = isLocale(requested) ? requested : DEFAULT_LOCALE;
-  const settings = await sanityFetch<SiteSettings>(SETTINGS_QUERY);
+  const settings = await sanityFetch<SiteSettings>(SETTINGS_QUERY, {}, lang);
 
   return (
     // suppressHydrationWarning: the inline script adds data-reveal to <html>

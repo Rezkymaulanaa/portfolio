@@ -93,14 +93,15 @@ export const SETTINGS_QUERY = defineQuery(`*[_id == "siteSettings"][0]{
   usualTools[]->{ _id, name, icon }
 }`);
 
-const PROJECT_CARD_FIELDS = `_id, title, "slug": slug.current, category, tags, shortDescription, coverImage, coverStyle, coverImages`;
+// Text fields come with their Indonesian twin ("...Id", see localize.ts).
+const PROJECT_CARD_FIELDS = `_id, title, titleId, "slug": slug.current, category, tags, tagsId, shortDescription, shortDescriptionId, coverImage, coverStyle, coverImages`;
 
 export const FEATURED_PROJECTS_QUERY = defineQuery(
   `*[_type == "project" && featured == true] | order(order asc){ ${PROJECT_CARD_FIELDS} }`,
 );
 
 export const SERVICES_QUERY = defineQuery(
-  `*[_type == "service"] | order(order asc){ _id, title, "slug": slug.current, description }`,
+  `*[_type == "service"] | order(order asc){ _id, title, titleId, "slug": slug.current, description, descriptionId }`,
 );
 
 export type SkillGroup = {
@@ -110,7 +111,7 @@ export type SkillGroup = {
 };
 
 export const SKILL_GROUPS_QUERY = defineQuery(
-  `*[_type == "skillGroup"] | order(order asc){ _id, title, items }`,
+  `*[_type == "skillGroup"] | order(order asc){ _id, title, titleId, items, itemsId }`,
 );
 
 export const ALL_PROJECTS_QUERY = defineQuery(
@@ -179,8 +180,9 @@ export type CaseBlock =
 const SIZED_IMAGE = `..., "dimensions": asset->metadata.dimensions{ width, height }`;
 
 export const PROJECT_QUERY = defineQuery(`*[_type == "project" && slug.current == $slug][0]{
-  _id, title, "slug": slug.current, category, tags, shortDescription, timeline, livePreviewUrl,
-  "service": service->title,
+  _id, title, titleId, "slug": slug.current, category, tags, tagsId, shortDescription, shortDescriptionId,
+  timeline, timelineId, livePreviewUrl,
+  "service": service->title, "serviceId": service->titleId,
   tools[]->{ _id, name, icon },
   coverImage{ ${SIZED_IMAGE} },
   coverStyle,

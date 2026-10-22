@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { DEFAULT_LOCALE, isLocale } from "@/i18n/config";
 import { loadOgFonts, OG_COLORS, OG_SIZE } from "@/lib/og";
 import { sanityFetch } from "@/sanity/lib/client";
 import { croppedImageUrl } from "@/sanity/lib/image";
@@ -15,8 +16,10 @@ export const alt = "Alif Rezky Maulana — Portfolio";
 export const size = OG_SIZE;
 export const contentType = "image/png";
 
-export default async function Image() {
-  const [settings, fonts] = await Promise.all([sanityFetch<SiteSettings>(SETTINGS_QUERY), loadOgFonts()]);
+export default async function Image({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const [settings, fonts] = await Promise.all([sanityFetch<SiteSettings>(SETTINGS_QUERY, {}, locale), loadOgFonts()]);
   const { width, height } = OG_SIZE;
 
   if (settings.ogImage) {

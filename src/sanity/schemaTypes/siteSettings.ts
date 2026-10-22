@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { withIndonesian } from "./i18n";
 import { imageWithAlt } from "./imageWithAlt";
 
 // Single document with all site-wide texts, links and images.
@@ -23,21 +24,25 @@ export const siteSettings = defineType({
       group: "hero",
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: "headline",
-      title: "Headline",
-      description: "Bold line below the name, e.g. “Bachelor of Information System”.",
-      type: "string",
-      group: "hero",
-    }),
-    defineField({
-      name: "tagline",
-      title: "Tagline",
-      description: "Short sentence below the headline.",
-      type: "text",
-      rows: 2,
-      group: "hero",
-    }),
+    ...withIndonesian(
+      defineField({
+        name: "headline",
+        title: "Headline",
+        description: "Bold line below the name, e.g. “Bachelor of Information System”.",
+        type: "string",
+        group: "hero",
+      }),
+    ),
+    ...withIndonesian(
+      defineField({
+        name: "tagline",
+        title: "Tagline",
+        description: "Short sentence below the headline.",
+        type: "text",
+        rows: 2,
+        group: "hero",
+      }),
+    ),
     imageWithAlt({
       name: "heroImage",
       title: "Hero photo",
@@ -63,13 +68,15 @@ export const siteSettings = defineType({
       options: { accept: "video/mp4" },
       group: "hero",
     }),
-    defineField({
-      name: "availabilityLabel",
-      title: "Availability label",
-      description: "Text in the navbar pill, e.g. “Available for New Project”.",
-      type: "string",
-      group: "hero",
-    }),
+    ...withIndonesian(
+      defineField({
+        name: "availabilityLabel",
+        title: "Availability label",
+        description: "Text in the navbar pill, e.g. “Available for New Project”.",
+        type: "string",
+        group: "hero",
+      }),
+    ),
     defineField({
       name: "isAvailable",
       title: "Available for work",
@@ -80,20 +87,24 @@ export const siteSettings = defineType({
     }),
 
     // About
-    defineField({
-      name: "aboutHeading",
-      title: "About heading",
-      type: "string",
-      group: "about",
-    }),
-    defineField({
-      name: "aboutText",
-      title: "About text",
-      description: "A few short paragraphs about you. Leave an empty line between paragraphs.",
-      type: "text",
-      rows: 8,
-      group: "about",
-    }),
+    ...withIndonesian(
+      defineField({
+        name: "aboutHeading",
+        title: "About heading",
+        type: "string",
+        group: "about",
+      }),
+    ),
+    ...withIndonesian(
+      defineField({
+        name: "aboutText",
+        title: "About text",
+        description: "A few short paragraphs about you. Leave an empty line between paragraphs.",
+        type: "text",
+        rows: 8,
+        group: "about",
+      }),
+    ),
     imageWithAlt({
       name: "aboutImage",
       title: "About photo",
@@ -157,20 +168,24 @@ export const siteSettings = defineType({
       type: "url",
       group: "contact",
     }),
-    defineField({
-      name: "ctaHeading",
-      title: "CTA heading",
-      description: "e.g. “Have a project in mind?”",
-      type: "string",
-      group: "contact",
-    }),
-    defineField({
-      name: "ctaText",
-      title: "CTA text",
-      type: "text",
-      rows: 3,
-      group: "contact",
-    }),
+    ...withIndonesian(
+      defineField({
+        name: "ctaHeading",
+        title: "CTA heading",
+        description: "e.g. “Have a project in mind?”",
+        type: "string",
+        group: "contact",
+      }),
+    ),
+    ...withIndonesian(
+      defineField({
+        name: "ctaText",
+        title: "CTA text",
+        type: "text",
+        rows: 3,
+        group: "contact",
+      }),
+    ),
     defineField({
       name: "footerName",
       title: "Footer name",
@@ -198,23 +213,27 @@ export const siteSettings = defineType({
     }),
 
     // SEO
-    defineField({
-      name: "siteTitle",
-      title: "Site title",
-      description: "Shown in the browser tab and search results.",
-      type: "string",
-      group: "seo",
-      validation: (rule) => rule.required().max(70),
-    }),
-    defineField({
-      name: "siteDescription",
-      title: "Site description",
-      description: "Shown in Google results and link previews. Aim for 120–160 characters.",
-      type: "text",
-      rows: 3,
-      group: "seo",
-      validation: (rule) => rule.max(200),
-    }),
+    ...withIndonesian(
+      defineField({
+        name: "siteTitle",
+        title: "Site title",
+        description: "Shown in the browser tab and search results.",
+        type: "string",
+        group: "seo",
+        validation: (rule) => rule.required().max(70),
+      }),
+    ),
+    ...withIndonesian(
+      defineField({
+        name: "siteDescription",
+        title: "Site description",
+        description: "Shown in Google results and link previews. Aim for 120–160 characters.",
+        type: "text",
+        rows: 3,
+        group: "seo",
+        validation: (rule) => rule.max(200),
+      }),
+    ),
     defineField({
       name: "ogImage",
       title: "Social share image",

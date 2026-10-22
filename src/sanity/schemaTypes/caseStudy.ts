@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField } from "sanity";
+import { withIndonesian } from "./i18n";
 import { MOCKUP_SIZE_HINT, mockupField, mockupImagesField } from "./mockup";
 
 // Content blocks for the project detail page ("case study").
@@ -25,20 +26,24 @@ const textBlock = defineArrayMember({
   title: "Text",
   type: "object",
   fields: [
-    heading,
-    defineField({
-      name: "body",
-      title: "Text",
-      description: "Leave an empty line between paragraphs.",
-      type: "text",
-      rows: 6,
-    }),
-    defineField({
-      name: "points",
-      title: "Bullet points",
-      type: "array",
-      of: [defineArrayMember({ type: "text", rows: 2 })],
-    }),
+    ...withIndonesian(heading),
+    ...withIndonesian(
+      defineField({
+        name: "body",
+        title: "Text",
+        description: "Leave an empty line between paragraphs.",
+        type: "text",
+        rows: 6,
+      }),
+    ),
+    ...withIndonesian(
+      defineField({
+        name: "points",
+        title: "Bullet points",
+        type: "array",
+        of: [defineArrayMember({ type: "text", rows: 2 })],
+      }),
+    ),
   ],
   preview: { select: { title: "heading" }, prepare: ({ title }) => ({ title: title ?? "Text", subtitle: "Text" }) },
 });
@@ -48,7 +53,7 @@ const statsBlock = defineArrayMember({
   title: "Numbers",
   type: "object",
   fields: [
-    heading,
+    ...withIndonesian(heading),
     defineField({
       name: "items",
       title: "Numbers",
@@ -57,8 +62,8 @@ const statsBlock = defineArrayMember({
         defineArrayMember({
           type: "object",
           fields: [
-            defineField({ name: "value", title: "Value", description: "e.g. “100%”", type: "string" }),
-            defineField({ name: "label", title: "Label", description: "e.g. “Test success rate”", type: "string" }),
+            ...withIndonesian(defineField({ name: "value", title: "Value", description: "e.g. “100%”", type: "string" })),
+            ...withIndonesian(defineField({ name: "label", title: "Label", description: "e.g. “Test success rate”", type: "string" })),
           ],
           preview: { select: { title: "value", subtitle: "label" } },
         }),
@@ -74,8 +79,8 @@ const problemsBlock = defineArrayMember({
   title: "Problem → Solution",
   type: "object",
   fields: [
-    heading,
-    intro,
+    ...withIndonesian(heading),
+    ...withIndonesian(intro),
     defineField({
       name: "items",
       title: "Pairs",
@@ -84,8 +89,8 @@ const problemsBlock = defineArrayMember({
         defineArrayMember({
           type: "object",
           fields: [
-            defineField({ name: "problem", title: "Problem", type: "text", rows: 3 }),
-            defineField({ name: "solution", title: "Solution", type: "text", rows: 3 }),
+            ...withIndonesian(defineField({ name: "problem", title: "Problem", type: "text", rows: 3 })),
+            ...withIndonesian(defineField({ name: "solution", title: "Solution", type: "text", rows: 3 })),
           ],
           preview: { select: { title: "problem", subtitle: "solution" } },
         }),
@@ -103,8 +108,8 @@ const stepsBlock = defineArrayMember({
   title: "Steps",
   type: "object",
   fields: [
-    heading,
-    intro,
+    ...withIndonesian(heading),
+    ...withIndonesian(intro),
     defineField({
       name: "steps",
       title: "Steps",
@@ -114,8 +119,8 @@ const stepsBlock = defineArrayMember({
         defineArrayMember({
           type: "object",
           fields: [
-            defineField({ name: "title", title: "Title", type: "string" }),
-            defineField({ name: "description", title: "Description", type: "text", rows: 3 }),
+            ...withIndonesian(defineField({ name: "title", title: "Title", type: "string" })),
+            ...withIndonesian(defineField({ name: "description", title: "Description", type: "text", rows: 3 })),
           ],
           preview: { select: { title: "title", subtitle: "description" } },
         }),
@@ -130,8 +135,8 @@ const imagesBlock = defineArrayMember({
   title: "Images",
   type: "object",
   fields: [
-    heading,
-    intro,
+    ...withIndonesian(heading),
+    ...withIndonesian(intro),
     defineField({
       name: "images",
       title: "Images",
@@ -148,7 +153,7 @@ const imagesBlock = defineArrayMember({
               type: "string",
               validation: (rule) => rule.required().error("Alt text is required."),
             }),
-            defineField({ name: "caption", title: "Caption", type: "string" }),
+            ...withIndonesian(defineField({ name: "caption", title: "Caption", type: "string" })),
             mockupField({ name: "mockup", title: "Mockup", description: "Show this image inside a device." }),
             mockupImagesField({
               name: "mockupImages",
@@ -170,14 +175,16 @@ const tableBlock = defineArrayMember({
   title: "Table",
   type: "object",
   fields: [
-    heading,
-    intro,
-    defineField({
-      name: "columns",
-      title: "Column titles",
-      type: "array",
-      of: [defineArrayMember({ type: "string" })],
-    }),
+    ...withIndonesian(heading),
+    ...withIndonesian(intro),
+    ...withIndonesian(
+      defineField({
+        name: "columns",
+        title: "Column titles",
+        type: "array",
+        of: [defineArrayMember({ type: "string" })],
+      }),
+    ),
     defineField({
       name: "rows",
       title: "Rows",
@@ -187,12 +194,14 @@ const tableBlock = defineArrayMember({
         defineArrayMember({
           type: "object",
           fields: [
-            defineField({
-              name: "cells",
-              title: "Cells",
-              type: "array",
-              of: [defineArrayMember({ type: "text", rows: 2 })],
-            }),
+            ...withIndonesian(
+              defineField({
+                name: "cells",
+                title: "Cells",
+                type: "array",
+                of: [defineArrayMember({ type: "text", rows: 2 })],
+              }),
+            ),
           ],
           preview: { select: { title: "cells.0", subtitle: "cells.1" } },
         }),
@@ -212,8 +221,8 @@ export const caseStudyFields = [
       defineArrayMember({
         type: "object",
         fields: [
-          defineField({ name: "label", title: "Label", type: "string" }),
-          defineField({ name: "value", title: "Value", type: "string" }),
+          ...withIndonesian(defineField({ name: "label", title: "Label", type: "string" })),
+          ...withIndonesian(defineField({ name: "value", title: "Value", type: "string" })),
         ],
         preview: { select: { title: "label", subtitle: "value" } },
       }),

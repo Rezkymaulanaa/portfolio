@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { withIndonesian } from "./i18n";
 import { caseStudyFields } from "./caseStudy";
 import { imageWithAlt } from "./imageWithAlt";
 import { MOCKUP_SIZE_HINT, mockupField, mockupImagesField } from "./mockup";
@@ -13,13 +14,15 @@ export const project = defineType({
   title: "Project",
   type: "document",
   fields: [
-    defineField({
-      name: "title",
-      title: "Title",
-      description: "Project name shown on the card and the detail page.",
-      type: "string",
-      validation: (rule) => rule.required().max(80),
-    }),
+    ...withIndonesian(
+      defineField({
+        name: "title",
+        title: "Title",
+        description: "Project name shown on the card and the detail page.",
+        type: "string",
+        validation: (rule) => rule.required().max(80),
+      }),
+    ),
     defineField({
       name: "slug",
       title: "Slug (URL)",
@@ -37,15 +40,17 @@ export const project = defineType({
       options: { list: PROJECT_CATEGORIES, layout: "radio" },
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: "tags",
-      title: "Tags",
-      description: "Short labels shown as pink pills, e.g. “Web App”. Type and press Enter.",
-      type: "array",
-      of: [defineArrayMember({ type: "string" })],
-      options: { layout: "tags" },
-      validation: (rule) => rule.max(4),
-    }),
+    ...withIndonesian(
+      defineField({
+        name: "tags",
+        title: "Tags",
+        description: "Short labels shown as pink pills, e.g. “Web App”. Type and press Enter.",
+        type: "array",
+        of: [defineArrayMember({ type: "string" })],
+        options: { layout: "tags" },
+        validation: (rule) => rule.max(4),
+      }),
+    ),
     defineField({
       name: "service",
       title: "Service",
@@ -54,20 +59,24 @@ export const project = defineType({
       to: [{ type: "service" }],
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: "shortDescription",
-      title: "Short description",
-      description: "One or two sentences shown under the title on the detail page.",
-      type: "text",
-      rows: 3,
-      validation: (rule) => rule.max(240),
-    }),
-    defineField({
-      name: "timeline",
-      title: "Timeline",
-      description: "How long the project took, e.g. “4 Weeks”.",
-      type: "string",
-    }),
+    ...withIndonesian(
+      defineField({
+        name: "shortDescription",
+        title: "Short description",
+        description: "One or two sentences shown under the title on the detail page.",
+        type: "text",
+        rows: 3,
+        validation: (rule) => rule.max(240),
+      }),
+    ),
+    ...withIndonesian(
+      defineField({
+        name: "timeline",
+        title: "Timeline",
+        description: "How long the project took, e.g. “4 Weeks”.",
+        type: "string",
+      }),
+    ),
     defineField({
       name: "tools",
       title: "Tools",

@@ -44,7 +44,7 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDictionary(lang);
-  const projects = await sanityFetch<ProjectCardData[]>(ALL_PROJECTS_QUERY);
+  const projects = await sanityFetch<ProjectCardData[]>(ALL_PROJECTS_QUERY, {}, lang);
 
   return (
     <section className="mx-auto max-w-work px-gutter pt-10 lg:pt-16">
