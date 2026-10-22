@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "node --env-file=.env.local scripts/seed.mjs",
-    "add-skripsi": "node --env-file=.env.local scripts/add-skripsi.mjs"
+    "add-skripsi": "node --env-file=.env.local scripts/add-skripsi.mjs",
+    "add-desa-tanakaraeng": "node --env-file=.env.local scripts/add-desa-tanakaraeng.mjs"
   },
   "dependencies": {
     "@sanity/client": "^8.9.0",
