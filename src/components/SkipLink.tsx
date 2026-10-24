@@ -20,7 +20,7 @@ export function SkipLink() {
         main.focus({ preventScroll: true });
         main.scrollIntoView({ block: "start" });
       }}
-      className="sr-only rounded-full bg-ink px-5 py-2 text-page focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60]"
+      className="sr-only rounded-card bg-ink px-5 py-2 text-page focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60]"
     >
       {label}
     </a>

@@ -112,7 +112,7 @@ export default async function ProjectPage(props: PageProps<"/[lang]/work/[slug]"
                     {project.tools.map((tool) => (
                       <li
                         key={tool._id}
-                        className="flex size-14 shrink-0 items-center justify-center rounded-md border border-line bg-surface p-2 shadow-pill lg:size-[5.125rem] lg:p-3"
+                        className="flex size-14 shrink-0 items-center justify-center rounded-card border border-line bg-surface p-2 shadow-pill lg:size-[5.125rem] lg:p-3"
                       >
                         <Image
                           src={urlFor(tool.icon)}

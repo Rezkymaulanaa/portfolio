@@ -11,7 +11,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
   return (
     <LocalizedLink
       href={`/work/${project.slug}`}
-      className="group block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
+      className="group block rounded-card focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
     >
       <div className="relative">
         <ProjectCover image={project.coverImage} style={project.coverStyle} extraImages={project.coverImages} />

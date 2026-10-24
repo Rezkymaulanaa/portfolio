@@ -45,7 +45,7 @@ export function CarouselSlides({ slides, sizes, preload }: { slides: Slide[]; si
 
       {count > 1 && (
         <>
-          <span className="absolute top-[1.2cqw] right-[1.2cqw] rounded-full bg-black/60 px-[0.9cqw] py-[0.3cqw] text-[1.2cqw] leading-none font-medium text-white tabular-nums">
+          <span className="absolute top-[1.2cqw] right-[1.2cqw] rounded-[0.3cqw] bg-black/60 px-[0.9cqw] py-[0.3cqw] text-[1.2cqw] leading-none font-medium text-white tabular-nums">
             {index + 1}/{count}
           </span>
           {/* Dots sit in the action row below the image, like Instagram (at most 5). */}

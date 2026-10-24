@@ -56,6 +56,8 @@ type LetsTalkButtonProps = {
   variant: "accent" | "dark";
   className?: string;
   onClick?: () => void;
+  /** Fully round corners (navbar) instead of the usual 4px. */
+  pill?: boolean;
 };
 
 // Unstyled button that opens the message panel (e.g. the big footer heading).
@@ -76,7 +78,7 @@ export function LetsTalkTrigger({ className, children }: { className?: string; c
 }
 
 // Pill button that opens the message panel.
-export function LetsTalkButton({ variant, className, onClick }: LetsTalkButtonProps) {
+export function LetsTalkButton({ variant, className, onClick, pill = false }: LetsTalkButtonProps) {
   const { isOpen, open } = useContact();
   const t = useDictionary();
 
@@ -89,7 +91,7 @@ export function LetsTalkButton({ variant, className, onClick }: LetsTalkButtonPr
         onClick?.();
         open(event.currentTarget);
       }}
-      className={pillClasses(variant, `cursor-pointer ${className ?? ""}`)}
+      className={pillClasses(variant, `cursor-pointer ${className ?? ""}`, pill ? "pill" : "card")}
     >
       {t.common.letsTalk} <ArrowUpRightIcon />
     </button>

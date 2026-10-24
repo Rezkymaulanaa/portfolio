@@ -2,8 +2,9 @@ import type { ReactNode } from "react";
 import { LocalizedLink } from "./LocalizedLink";
 import { SectionLink } from "./SectionLink";
 
-// Shared pill-shaped buttons and links.
+// Shared buttons and links.
 // variant: accent (pink), dark (near-black), outline (bordered), light (white).
+// shape: "card" (4px corners, the default) or "pill" (fully round; navbar).
 
 type Variant = "accent" | "dark" | "outline" | "light";
 
@@ -14,9 +15,9 @@ const variantClasses: Record<Variant, string> = {
   light: "border border-line bg-page text-ink shadow-pill hover:bg-surface",
 };
 
-export function pillClasses(variant: Variant, extra = "") {
+export function pillClasses(variant: Variant, extra = "", shape: "card" | "pill" = "card") {
   return [
-    "inline-flex items-center justify-center gap-[0.5em] rounded-full px-[1.1em] py-[0.45em]",
+    `inline-flex items-center justify-center gap-[0.5em] ${shape === "pill" ? "rounded-full" : "rounded-card"} px-[1.1em] py-[0.45em]`,
     "whitespace-nowrap transition duration-200 motion-reduce:transition-none",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
     variantClasses[variant],

@@ -12,7 +12,7 @@ export function CategoryLabel({ category }: { category: ProjectCardData["categor
 
   return (
     <span
-      className={`absolute top-3 left-3 z-10 rounded-full px-3 py-1 text-label font-medium backdrop-blur-sm lg:top-4 lg:left-4 lg:px-3.5 lg:py-1.5 ${
+      className={`absolute top-3 left-3 z-10 rounded-card px-3 py-1 text-label font-medium backdrop-blur-sm lg:top-4 lg:left-4 lg:px-3.5 lg:py-1.5 ${
         category === "real-project"
           ? "border border-white/15 bg-ink/80 text-page"
           : "bg-surface/90 text-ink shadow-pill"

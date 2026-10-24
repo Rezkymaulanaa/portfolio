@@ -32,6 +32,21 @@ const EXPAND_BEFORE = 8;
 // Delay before collapsing when the mouse leaves the bar.
 const LEAVE_DELAY_MS = 300;
 
+// Time of the last Tab key press. Keyboard focus only opens the bar when the
+// visitor tabs into it, not when a script puts focus back, e.g. on "Let's
+// Talk" after the message panel closes (with Escape, or after typing in it,
+// the browser counts that as keyboard focus and the bar would stay open).
+let lastTabAt = 0;
+if (typeof window !== "undefined") {
+  window.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.key === "Tab") lastTabAt = performance.now();
+    },
+    true,
+  );
+}
+
 type NavbarProps = {
   availabilityLabel?: string;
   isAvailable?: boolean;
@@ -108,7 +123,8 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
 
   function handleFocus(event: React.FocusEvent) {
     // Only keyboard focus expands the bar (mouse and touch have their own rules).
-    if ((event.target as HTMLElement).matches(":focus-visible")) setFocused(true);
+    const fromTab = performance.now() - lastTabAt < 500;
+    if (fromTab && (event.target as HTMLElement).matches(":focus-visible")) setFocused(true);
   }
 
   function handleBlur(event: React.FocusEvent) {
@@ -148,7 +164,7 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
             ? "h-auto w-[min(24rem,100%)] lg:h-[4.25rem] lg:w-[min(82.5rem,100%)]"
             : "h-11 w-[4.5rem] lg:h-[3.75rem] lg:w-24",
           showBarStyle
-            ? "border-white/70 bg-white/25 backdrop-blur-md"
+            ? "border-ink/20 bg-page/60 backdrop-blur-md"
             : "border-line/40 bg-page/95 shadow-float backdrop-blur-md",
         ].join(" ")}
       >
@@ -207,7 +223,7 @@ export function Navbar({ availabilityLabel, isAvailable }: NavbarProps) {
 
           <div className="flex items-center justify-between gap-3 lg:justify-end">
             <LanguageSwitch />
-            <LetsTalkButton variant="dark" onClick={closeMenu} className="text-nav lg:text-small" />
+            <LetsTalkButton variant="dark" pill onClick={closeMenu} className="text-nav lg:text-small" />
           </div>
         </div>
       </nav>

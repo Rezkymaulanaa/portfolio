@@ -100,7 +100,8 @@ export function ContactPanel({ ownerName, contactEmail }: ContactPanelProps) {
       </div>
 
       {/* Conversation */}
-      <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
+      {/* data-lenis-prevent: the mouse wheel scrolls these messages, not the page. */}
+      <div data-lenis-prevent className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
         <ChatBubble>{t.intro}</ChatBubble>
 
         {isSuccess && state.status === "success" ? (
@@ -218,8 +219,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function ChatBubble({ children, fromVisitor = false }: { children: React.ReactNode; fromVisitor?: boolean }) {
   return (
     <p
-      className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-[1.55] ${
-        fromVisitor ? "ml-auto rounded-br-md bg-ink text-page" : "rounded-bl-md bg-page text-ink"
+      className={`max-w-[88%] rounded-card px-3.5 py-2.5 text-[13px] leading-[1.55] ${
+        fromVisitor ? "ml-auto bg-ink text-page" : "bg-page text-ink"
       }`}
     >
       {children}

@@ -16,6 +16,8 @@
   --color-ghost: #e9e9e9; /* oversized faint words on light sections */
   --color-ghost-dark: #232323; /* oversized faint words on dark sections */
   --color-available: #00d26a; /* green availability dot */
+  --color-lilac: #cdb8ff; /* second pastel accent next to pink: stickers */
+  --color-peach: #ffc8a8; /* third pastel accent: stickers */
 
   /* Font (Poppins is loaded in layout.tsx with next/font) */
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
@@ -24,11 +26,12 @@
   /* Max widths include the side gutter (px-gutter, 4rem each side at desktop). */
   --container-content: 83.75rem; /* 1211px content: service, capabilities, about */
   --container-work: 81.25rem; /* 1170px content: project grids, detail page */
-  --container-hero: 85rem; /* hero text starts 105px from the edge at 1440px */
 
-  /* Radii: pills use rounded-full; cards use rounded-card */
-  --radius-card: 0.5rem;
-  --radius-frame: 1rem;
+  /* Radii: one small radius everywhere (buttons, tags, cards, panels, photos).
+     In px, so it stays 4px when the desktop scale shrinks rem.
+     rounded-full is only for real circles (dots, round icon buttons). */
+  --radius-card: 4px;
+  --radius-frame: 4px;
 
   /* Shadows */
   --shadow-pill: 0 3px 4px rgb(0 0 0 / 0.16);
@@ -38,9 +41,6 @@
    * Type scale. Sizes are the desktop (1440px) sizes from the mockup;
    * clamp() shrinks them smoothly on smaller screens.
    */
-  /* Hero name also shrinks on short screens (svh) so the hero fits one screen. */
-  --text-hero: clamp(3rem, min(8.4vw, 12.5svh), 7.6rem);
-  --text-hero--line-height: 1;
   --text-watermark: clamp(2.75rem, 9.5vw, 8.75rem);
   --text-watermark--line-height: 1;
   --text-section: clamp(2.25rem, 5vw, 4.5rem);
@@ -84,6 +84,9 @@
 /* Devices without hover (phones, tablets) */
 @custom-variant no-hover (@media (hover: none));
 
+/* Landscape screens (phones turned sideways and up): the hero's fixed composition (Hero.tsx) */
+@custom-variant stage (@media (min-width: 40rem) and (min-aspect-ratio: 5/4));
+
 /* Large screens with a mouse: used for hover-only layouts (service rows) */
 @custom-variant desk (@media (min-width: 64rem) and (hover: hover));
 
@@ -92,10 +95,6 @@
   interpolate-size: allow-keywords;
   /* Easing of the scroll reveal: fast start, very soft landing. */
   --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 /*
@@ -107,12 +106,6 @@ html {
 @media (min-width: 64rem) {
   html {
     font-size: clamp(0.8125rem, 0.89vw, 1rem);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
   }
 }
 
@@ -288,24 +281,19 @@ body {
 }
 
 /*
- * Photo grid hover (Education): the photo under the mouse zooms in a little,
- * the other photos dim. Uses "scale" and "filter", so it does not clash with
- * the reveal zoom (transform). Mouse devices only.
+ * Hero (Hero.tsx, HeroMotion.tsx): parts stay hidden until the GSAP intro
+ * takes over, so they never flash in their end position first. Same switch
+ * as the scroll reveal: without JavaScript or with reduced motion,
+ * data-reveal is never set and the hero simply shows.
  */
-.photo-tile img {
-  transition:
-    scale 0.7s var(--ease-reveal),
-    filter 0.5s ease;
+[data-reveal] [data-hero-intro] {
+  visibility: hidden;
 }
 
-@media (hover: hover) {
-  .photo-tile:hover img {
-    scale: 1.06;
-  }
-
-  .photo-grid:has(.photo-tile:hover) .photo-tile:not(:hover) img {
-    filter: grayscale(0.7) brightness(0.7);
-  }
+/* The scrolling photo gallery (PhotoGallery.tsx) ends in the footer's black,
+   so the footer follows it directly, without the usual gap. */
+main:has([data-gallery][data-active]) + footer {
+  margin-top: 0;
 }
 
 /* Tool icons (Capabilities): while one tool is hovered, the others dim. */
@@ -313,11 +301,5 @@ body {
   .tool-list:has(.tool-tile:hover) .tool-tile:not(:hover) {
     opacity: 0.35;
     filter: grayscale(1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .photo-tile:hover img {
-    scale: none;
   }
 }

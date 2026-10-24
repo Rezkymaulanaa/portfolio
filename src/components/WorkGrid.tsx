@@ -35,7 +35,7 @@ export function WorkGrid({ projects, action }: WorkGridProps) {
                 type="button"
                 onClick={() => setFilter(item)}
                 aria-pressed={filter === item}
-                className={`rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink motion-reduce:transition-none ${
+                className={`rounded-card transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink motion-reduce:transition-none ${
                   filter === item ? "text-ink" : "text-muted hover:text-ink"
                 }`}
               >

@@ -31,13 +31,15 @@ export function About({ settings, lang }: { settings: SiteSettings; lang: Locale
             section fits in one screen. */}
         <div className="mt-10 grid items-center gap-8 lg:mt-[clamp(1.5rem,5svh,4rem)] lg:grid-cols-[5fr_7fr] lg:gap-16">
           {settings.aboutImage && (
-            <div data-from="clip" className="reveal reveal-zoom rounded-frame bg-surface p-3 lg:p-4">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-card bg-page lg:aspect-auto lg:h-[clamp(20rem,52svh,34rem)]">
+            <div data-from="clip" className="reveal reveal-zoom">
+              {/* Portrait 2:3. On desktop the height follows the screen and the
+                  width follows from the shape. */}
+              <div className="relative aspect-[2/3] w-full max-w-[24rem] overflow-hidden rounded-card bg-line lg:h-[clamp(22rem,64svh,42rem)] lg:w-auto lg:max-w-full">
                 <Image
                   src={urlFor(settings.aboutImage)}
                   alt={settings.aboutImage.alt ?? ""}
                   fill
-                  sizes="(min-width: 1024px) 460px, 100vw"
+                  sizes="(min-width: 1024px) 440px, 24rem"
                   className="object-cover object-[72%_center] grayscale"
                 />
               </div>
