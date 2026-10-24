@@ -1,13 +1,12 @@
-import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import type { SiteSettings } from "@/sanity/lib/queries";
+import { PhotoGallery } from "./PhotoGallery";
 import { SplitText } from "./SplitText";
 
 // "Education" section: a dark rounded panel (same black as Capabilities)
 // with the university name on the left and the degree + GPA on the right,
-// followed by a row of 4 photos from the Studio.
+// followed by the scrolling photo gallery (PhotoGallery.tsx).
 
 export function Education({ photos = [], lang }: { photos?: SiteSettings["photoGrid"]; lang: Locale }) {
   const t = getDictionary(lang).education;
@@ -48,23 +47,9 @@ export function Education({ photos = [], lang }: { photos?: SiteSettings["photoG
             </div>
           </div>
         </div>
-
-        {photos.length > 0 && (
-          <ul className="photo-grid mt-8 grid grid-cols-2 gap-1.5 lg:mt-12 lg:grid-cols-4">
-            {photos.map((photo) => (
-              <li key={photo._key} data-from="clip" className="photo-tile reveal reveal-zoom relative isolate aspect-[2/3] overflow-hidden rounded-card bg-ghost">
-                <Image
-                  src={urlFor(photo)}
-                  alt={photo.alt ?? ""}
-                  fill
-                  sizes="(min-width: 1024px) 25vw, 50vw"
-                  className="object-cover"
-                />
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
+
+      {photos.length > 0 && <PhotoGallery photos={photos} />}
     </section>
   );
 }

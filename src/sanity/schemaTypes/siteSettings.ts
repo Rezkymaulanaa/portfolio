@@ -112,8 +112,9 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "photoGrid",
-      title: "Photo grid",
-      description: "4 portrait photos shown in a row below the Education section. Hidden while empty.",
+      title: "Photo gallery",
+      description:
+        "Portrait photos (2:3) shown one after another in the scrolling gallery below the Education section. Add as many as you like; the animation adapts. Hidden while empty.",
       type: "array",
       of: [
         defineArrayMember({
@@ -129,7 +130,6 @@ export const siteSettings = defineType({
           ],
         }),
       ],
-      validation: (rule) => rule.max(4),
       group: "about",
     }),
     defineField({
