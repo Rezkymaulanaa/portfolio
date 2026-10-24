@@ -67,6 +67,15 @@ export function ArrowUpIcon({ className = "size-[0.9em]" }: IconProps) {
   );
 }
 
+export function ArrowDownIcon({ className = "size-[1em]" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6}
+      strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M12 4v16M6 14l6 6 6-6" />
+    </svg>
+  );
+}
+
 export function DownloadIcon({ className = "size-[0.9em]" }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}

@@ -3,111 +3,142 @@ import { urlFor } from "@/sanity/lib/image";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import type { SiteSettings } from "@/sanity/lib/queries";
-import { ArrowUpRightIcon } from "./icons";
-import { PillLink } from "./Pill";
-import { SplitText } from "./SplitText";
+import { HeroMotion } from "./HeroMotion";
+import { ArrowDownIcon } from "./icons";
+import { SectionLink } from "./SectionLink";
 
-// Home page hero: full-width photo (or looping video), very large name,
-// headline, tagline and "Browse Projects" button.
+// Home page hero: large name, portrait photo (or looping video) with the
+// headline on its left and the tagline on its right, and "browse projects".
+// Animations: HeroMotion.tsx (GSAP).
+//
+// Two layouts:
+// - "stage" (landscape screens from 640px wide, see globals.css): a fixed
+//   composition like the 1440×1024 design. Everything is placed inside a box
+//   as wide as the content of the sections below (same left and right edges
+//   as "Selected Work") and as tall as the screen, in units of that box
+//   (cqw = 1% of its width, cqh = 1% of its height), so the composition
+//   looks the same on every landscape screen.
+// - Phones and portrait tablets: name on top, photo on the right with the
+//   headline beside it, tagline below the photo.
+
+// Design measurements (1440×1024, content from x 85 to 1355 = 1270 wide):
+// photo 420×631 at x 648, bottom at y 851; 34px between photo and texts.
+// The photo is centered in the screen height (slightly above the middle);
+// the name starts a little below the photo's top edge.
+const PHOTO_CROP = "object-right"; // the right part of the wide photo: the person and the blurred shadow, with some wall beside it
 
 export function Hero({ settings, lang }: { settings: SiteSettings; lang: Locale }) {
   const t = getDictionary(lang);
   const hasVideo = Boolean(settings.heroVideoWebm || settings.heroVideoMp4);
-  // Shape of the hero photo (the video should have the same shape).
-  const { width = 1440, height = 1024 } = settings.heroImage.dimensions ?? {};
-  // One word of the name per line: "ALIF / REZKY / MAULANA".
-  // The hero fills one full screen, so name and button are visible without
-  // scrolling. Exception: on large portrait screens (tablets held upright) it
-  // is as tall as the photo at full width (--hero-fit); a full-screen hero
-  // there would blow the photo up so much that the person stands behind the name.
+  // "ALIF REZKY / MAULANA": the last word on its own line.
+  const words = settings.fullName.split(" ").filter(Boolean);
+  const nameLines = words.length > 1 ? [words.slice(0, -1).join(" "), words.at(-1)!] : words;
+
   return (
-    <section
-      className="relative flex min-h-[max(36rem,100svh)] items-end overflow-hidden bg-line pt-24 pb-10 lg:portrait:min-h-[max(36rem,var(--hero-fit))] lg:pt-36 lg:pb-[clamp(2rem,8svh,8rem)]"
-      style={
-        {
-          "--hero-ratio": `${width} / ${height}`,
-          "--hero-fit": `${(100 * height) / width}vw`,
-        } as React.CSSProperties
-      }
-    >
-      <div className="reveal reveal-zoom absolute inset-0 overflow-hidden">
-        {/* Desktop: a blurred, enlarged copy of the photo fills the space that
-            the full-size media below does not cover on wide screens. */}
-        <Image
-          src={urlFor(settings.heroImage)}
-          alt=""
-          fill
-          sizes="320px"
-          className="hidden scale-110 object-cover blur-2xl lg:block"
-        />
-        {/* Phones: covers the whole hero (cropped at the sides).
-            Desktop: the whole photo/video at full hero height, stuck to the
-            right, never cropped at the bottom. On screens wider than the media
-            its left edge fades into the blurred copy; on narrower screens it
-            runs off the left edge (only plain wall is cut off there). */}
+    <HeroMotion className="relative overflow-clip px-gutter pt-24 pb-8 stage:h-[max(100svh,22rem)] stage:p-0">
+      <div className="stage:absolute stage:inset-y-0 stage:left-1/2 stage:w-[calc(min(100%,81.25rem)-2*clamp(1rem,5vw,4rem))] stage:-translate-x-1/2 stage:[container-type:size] stage:[--photo-h:min(61.6cqh,49.7cqw)]">
+        <h1
+          data-hero-name
+          className="text-[clamp(3rem,16vw,6rem)] leading-[0.82] font-extrabold tracking-[-0.035em] text-ink uppercase stage:absolute stage:top-[calc(51.5cqh-0.4*var(--photo-h))] stage:left-0 stage:text-[max(2.5rem,min(5.67cqw,7cqh))]"
+        >
+          <span className="sr-only">{settings.fullName}</span>
+          <span aria-hidden="true" data-hero-intro>
+            {nameLines.map((line) => (
+              // Each line is a mask: the letters slide up from behind its edge.
+              <span key={line} className="-my-[0.12em] block overflow-hidden py-[0.12em] whitespace-nowrap">
+                {[...line].map((char, index) =>
+                  char === " " ? (
+                    " "
+                  ) : (
+                    <span key={index} data-hero-char className="inline-block">
+                      {char}
+                    </span>
+                  ),
+                )}
+              </span>
+            ))}
+          </span>
+        </h1>
+
         <div
-          className="absolute inset-0 lg:inset-auto lg:top-0 lg:right-0 lg:aspect-(--hero-ratio) lg:h-full lg:[mask-image:linear-gradient(to_right,transparent,black_18%)]">
-          <Image
-            src={urlFor(settings.heroImage)}
-            alt={settings.heroImage.alt ?? ""}
-            fill
-            preload
-            sizes="100vw"
-            className="object-cover object-[72%_center] lg:object-top"
-          />
-          {/* Optional video over the photo. The photo stays underneath: it shows
-              while the video loads, and instead of the video for visitors who
-              prefer reduced motion. Decorative, so hidden from screen readers. */}
-          {hasVideo && (
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              aria-hidden="true"
-              className="absolute inset-0 size-full object-cover object-[72%_center] motion-reduce:hidden lg:object-top"
+          data-hero-frame
+          className="relative mt-6 ml-auto w-[clamp(45%,(100svh-21rem-26.5vw)*0.667,62%)] md:w-[clamp(40%,(100svh-32rem)*0.667,62%)] stage:absolute stage:bottom-[calc((100cqh-var(--photo-h))/2-1.5cqh)] stage:left-[44.3cqw] stage:m-0 stage:aspect-[2/3] stage:h-(--photo-h) stage:w-auto"
+        >
+          <div className="relative aspect-[2/3] stage:h-full">
+            <div data-hero-photo data-hero-intro className="absolute inset-0 overflow-hidden bg-line">
+              <div data-hero-media className="absolute inset-0">
+                <div data-hero-zoom className="absolute inset-0">
+                  <Image
+                    src={urlFor(settings.heroImage)}
+                    alt={settings.heroImage.alt ?? ""}
+                    fill
+                    preload
+                    sizes="(orientation: landscape) and (min-width: 40rem) 25vw, 62vw"
+                    className={`object-cover ${PHOTO_CROP}`}
+                  />
+                  {/* Optional video over the photo. The photo stays underneath: it
+                      shows while the video loads, and instead of the video for
+                      visitors who prefer reduced motion. Decorative, so hidden
+                      from screen readers. */}
+                  {hasVideo && (
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="auto"
+                      aria-hidden="true"
+                      className={`absolute inset-0 size-full object-cover ${PHOTO_CROP} motion-reduce:hidden`}
+                    >
+                      {settings.heroVideoWebm && <source src={settings.heroVideoWebm} type="video/webm" />}
+                      {settings.heroVideoMp4 && <source src={settings.heroVideoMp4} type="video/mp4" />}
+                    </video>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {settings.headline && (
+              <p
+                data-hero-drift="-0.2"
+                className="absolute right-full bottom-[20.8%] mr-3 w-max max-w-[7em] text-right text-[clamp(0.95rem,4.2vw,1.75rem)] leading-[0.88] font-bold tracking-[-0.03em] lowercase stage:mr-[2.68cqw] stage:text-[max(1.25rem,2.52cqw)]"
+              >
+                <span data-hero-text data-hero-intro className="block">
+                  {settings.headline}
+                </span>
+              </p>
+            )}
+          </div>
+
+          {settings.tagline && (
+            <p
+              data-hero-drift="-0.06"
+              className="mt-5 max-w-[11em] text-balance text-[clamp(0.95rem,3.9vw,1.35rem)] leading-[1.1] font-bold tracking-[-0.03em] stage:absolute stage:bottom-0 stage:left-full stage:mt-0 stage:ml-[2.68cqw] stage:w-max stage:max-w-[20cqw] stage:text-[max(1rem,1.89cqw)] stage:leading-[1.05]"
             >
-              {settings.heroVideoWebm && <source src={settings.heroVideoWebm} type="video/webm" />}
-              {settings.heroVideoMp4 && <source src={settings.heroVideoMp4} type="video/mp4" />}
-            </video>
+              <span data-hero-text data-hero-intro className="block">
+                {settings.tagline}
+              </span>
+            </p>
           )}
         </div>
-      </div>
-      {/* Light fade on small screens so the text stays readable over the photo. */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-page/85 via-page/40 to-transparent lg:hidden"
-      />
 
-      <div className="relative mx-auto w-full max-w-hero px-gutter">
-        <SplitText
-          as="h1"
-          text={settings.fullName}
-          lines
-          className="block text-hero leading-[0.86] font-extrabold tracking-[0.15em] text-ink uppercase"
-        />
-
-        <div className="mt-8 flex flex-col gap-6 lg:mt-[clamp(2rem,9svh,8.5rem)] lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            {settings.headline && (
-              <p className="reveal text-h2 font-bold">
-                {settings.headline}
-              </p>
-            )}
-            {settings.tagline && (
-              <p className="reveal mt-2 max-w-[28rem] text-lead">
-                {settings.tagline}
-              </p>
-            )}
-            <div data-from="scale" className="reveal mt-5 lg:mt-[clamp(1rem,3svh,1.5rem)]">
-              <PillLink href="#work" variant="accent" className="text-pill">
-                {t.hero.browseProjects} <ArrowUpRightIcon />
-              </PillLink>
-            </div>
-          </div>
+        <div
+          data-hero-fade
+          className="mt-8 stage:absolute stage:bottom-[4.5cqh] stage:left-0 stage:mt-0"
+        >
+          <span data-hero-text data-hero-intro className="block">
+            <SectionLink
+              href="#work"
+              className="group inline-flex flex-col items-center gap-1 text-[clamp(1rem,4.6vw,1.5rem)] lowercase stage:text-[max(1rem,1.89cqw)]"
+            >
+              <span className="underline-offset-4 group-hover:underline">{t.hero.browseProjects}</span>
+              <span data-hero-arrow className="block">
+                <ArrowDownIcon />
+              </span>
+            </SectionLink>
+          </span>
         </div>
       </div>
-    </section>
+    </HeroMotion>
   );
 }

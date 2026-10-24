@@ -9,11 +9,13 @@ import { Navbar } from "@/components/Navbar";
 import { RevealObserver } from "@/components/RevealObserver";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { SkipLink } from "@/components/SkipLink";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { DEFAULT_LOCALE, isLocale, LOCALES } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { alternatesFor } from "@/lib/alternates";
 import { openGraphBase } from "@/lib/og";
+import { stripExtensionAttributesScript } from "@/lib/dev-scripts";
 import { revealScript } from "@/lib/reveal";
 import { SITE_URL } from "@/lib/site";
 import { sanityFetch } from "@/sanity/lib/client";
@@ -72,6 +74,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
     <html lang={lang} className={`${poppins.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <InlineScript html={revealScript} />
+        {process.env.NODE_ENV === "development" && <InlineScript html={stripExtensionAttributesScript} />}
       </head>
       {/* suppressHydrationWarning: browser extensions add attributes to <body>
           (e.g. inmaintabuse). It only covers <body>'s own attributes, so real
@@ -84,6 +87,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
           >
             <NavigationTracker />
             <KeepLanguage />
+            <SmoothScroll />
             <SkipLink />
             <Navbar availabilityLabel={settings.availabilityLabel} isAvailable={settings.isAvailable} />
             {/* Stops the page from scrolling sideways on phones (see globals.css). */}

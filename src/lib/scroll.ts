@@ -1,4 +1,8 @@
+import { getSmoothScroll } from "./smooth-scroll";
+
 // Smooth scrolling helpers (instant for people who prefer reduced motion).
+// They go through Lenis when it runs (SmoothScroll.tsx), so its glide and
+// the browser's own smooth scrolling never fight each other.
 
 function scrollBehavior(): ScrollBehavior {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
@@ -10,14 +14,22 @@ function scrollBehavior(): ScrollBehavior {
 export function scrollToSection(id: string): boolean {
   const section = document.getElementById(id);
   if (!section) return false;
-  section.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+  const lenis = getSmoothScroll();
+  if (lenis) {
+    // Lenis keeps the section's scroll-margin-top, like scrollIntoView.
+    lenis.scrollTo(section);
+  } else {
+    section.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+  }
   window.history.replaceState(window.history.state, "", `#${id}`);
   return true;
 }
 
 // Scrolls back to the top and removes "#id" from the address bar.
 export function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: scrollBehavior() });
+  const lenis = getSmoothScroll();
+  if (lenis) lenis.scrollTo(0);
+  else window.scrollTo({ top: 0, behavior: scrollBehavior() });
   window.history.replaceState(
     window.history.state,
     "",
