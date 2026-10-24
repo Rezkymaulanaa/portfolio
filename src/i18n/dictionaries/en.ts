@@ -50,6 +50,9 @@ export const en = {
     watermark: "Capabilities",
     title: "Main Skills & Tools",
     tools: "Tools that i usually use",
+    // The same words as the large title of the scrolling tools row:
+    // a filled tag, two small stickers, then plain text.
+    toolsHeading: { tag: "Tools", stickerA: "that", stickerB: "i", rest: "usually use" },
   },
   about: {
     watermark: "About",

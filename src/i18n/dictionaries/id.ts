@@ -51,6 +51,7 @@ export const id: Dictionary = {
     watermark: "Kemampuan",
     title: "Keahlian & Tools Utama",
     tools: "Tools yang biasa saya gunakan",
+    toolsHeading: { tag: "Tools", stickerA: "yang", stickerB: "biasa", rest: "saya gunakan" },
   },
   about: {
     watermark: "Tentang",
