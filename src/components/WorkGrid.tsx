@@ -1,16 +1,37 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useLayoutEffect, useState, type ReactNode } from "react";
 import { useDictionary } from "@/i18n/I18nProvider";
 import type { ProjectCardData } from "@/sanity/lib/queries";
 import { ProjectCard } from "./ProjectCard";
 
 // Filter tabs (All / Real Project / Exploration) and the project card grid.
-// Filtering happens instantly in the browser.
+// Filtering happens instantly in the browser. The picked tab is kept in the
+// address (?filter=exploration), so Back from a project shows the same cards
+// again (and returns to the same spot), and a filtered link can be shared.
 
 const FILTERS = ["all", "real-project", "exploration"] as const;
+const PARAM = "filter";
 
 type FilterValue = (typeof FILTERS)[number];
+
+function isFilter(value: string | null): value is FilterValue {
+  return FILTERS.includes(value as FilterValue);
+}
+
+// Puts the filter in the address without a new step in the history
+// ("All" removes it again).
+function saveFilter(filter: FilterValue) {
+  const params = new URLSearchParams(window.location.search);
+  if (filter === "all") params.delete(PARAM);
+  else params.set(PARAM, filter);
+  const search = params.toString();
+  window.history.replaceState(
+    window.history.state,
+    "",
+    window.location.pathname + (search ? `?${search}` : "") + window.location.hash,
+  );
+}
 
 type WorkGridProps = {
   projects: ProjectCardData[];
@@ -21,6 +42,21 @@ type WorkGridProps = {
 export function WorkGrid({ projects, action }: WorkGridProps) {
   const [filter, setFilter] = useState<FilterValue>("all");
   const t = useDictionary();
+
+  // Read the filter from the address before the page is drawn, so after
+  // Back the filtered cards are in place when the scroll position is restored
+  // (SmoothScroll). Not with useSearchParams: that would leave the cards out
+  // of the prebuilt HTML.
+  useLayoutEffect(() => {
+    const saved = new URLSearchParams(window.location.search).get(PARAM);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reads the address once, before the first paint
+    if (isFilter(saved)) setFilter(saved);
+  }, []);
+
+  function pick(item: FilterValue) {
+    setFilter(item);
+    saveFilter(item);
+  }
 
   const visible =
     filter === "all" ? projects : projects.filter((project) => project.category === filter);
@@ -33,7 +69,7 @@ export function WorkGrid({ projects, action }: WorkGridProps) {
             <li key={item}>
               <button
                 type="button"
-                onClick={() => setFilter(item)}
+                onClick={() => pick(item)}
                 aria-pressed={filter === item}
                 className={`rounded-card transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink motion-reduce:transition-none ${
                   filter === item ? "text-ink" : "text-muted hover:text-ink"

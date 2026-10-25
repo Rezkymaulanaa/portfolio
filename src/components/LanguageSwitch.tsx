@@ -38,7 +38,7 @@ export function LanguageSwitch({ className = "" }: { className?: string }) {
     showNextPageInstantly();
     // replace, not push: switching language is not a step back in history,
     // so Back still goes to the page before.
-    router.replace(localizePath(option, path) + window.location.hash, { scroll: false });
+    router.replace(localizePath(option, path) + window.location.search + window.location.hash, { scroll: false });
   }
 
   return (
